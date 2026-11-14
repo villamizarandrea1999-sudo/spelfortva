@@ -1,5 +1,5 @@
 ---
-title: Co-op-spel PS5 för två – 12 bästa soffspelen (lokal multiplayer)
+title: Co-op-spel PS5 för två – 12 bästa soffspelen
 description: Bästa co-op-spelen till PS5 för två i soffan. Vi visar vilka som har delad skärm, online-läge och Friend's Pass – plus åldersgräns.
 date: 2026-11-12
 updated: 2026-11-14
@@ -20,14 +20,14 @@ Det korta svaret: köp **It Takes Two** eller **Split Fiction** om ni vill upple
 | Sackboy: A Big Adventure | Ja, 1–4 spelare | Ja | Nej | 7 |
 | LEGO Star Wars: The Skywalker Saga | Ja, delad skärm | Nej | Nej | 7 |
 | Minecraft | Ja, delad skärm | Ja | Nej | 7 |
-| Stardew Valley | Ja, delad skärm | Ja | Nej | 7 |
-| Unravel Two | Ja, samma skärm | Ja | Nej | – |
+| Stardew Valley | Ja, delad skärm | Ja | Nej | 12 |
+| Unravel Two | Ja, samma skärm | – | Nej | 7 |
 | Cuphead | Ja, samma skärm | Nej | Nej | 7 |
 | Rocket League | Ja, delad skärm | Ja | Gratis att spela | 3 |
 | Diablo IV | Ja, samma skärm | Ja | Nej | 18 |
 | Borderlands 3 | Ja, delad skärm | Ja | Nej | 18 |
 
-<!-- TODO: bekräfta PEGI för Unravel Two på pegi.info (troligen 7) -->
+<!-- VERIFIERA: onlineläge för Unravel Two på PS4/PS5 – PlayStation Store Sverige listar bara "1–2 spelare" och fjärrspel (14 nov 2026) -->
 
 ## Det här behöver ni för att spela två i soffan
 
@@ -79,8 +79,8 @@ Unravel Two är ett lugnt och vackert plattformsspel där ni styr två små figu
 :::spel
 namn: Unravel Two
 spelare: 1–2
+alder: PEGI 7
 delad: Samma skärm
-online: Ja
 passar: Er som vill ha något lugnt och vackert att spela en kväll.
 omdome: Charmigt och avslappnat. Kortare än de andra berättelsespelen.
 lank: TODO
@@ -172,7 +172,7 @@ Ni bygger upp en gård tillsammans, odlar, fiskar och lär känna invånarna i e
 :::spel
 namn: Stardew Valley
 spelare: 1–4
-alder: PEGI 7
+alder: PEGI 12
 delad: Ja
 online: Ja
 passar: Er som vill ha något lugnt att spela lite varje kväll.

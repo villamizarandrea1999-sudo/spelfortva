@@ -9,6 +9,10 @@ SITE = {
     "name": "Spel för två",
     "url": "https://spelfortva.com",
     "tagline": "Vi hjälper er att hitta rätt spel för två – brädspel, kortspel, co-op och mobilspel.",
+    # Namngiven skribent: fyll i när ni har en riktig person, t.ex.
+    # {"name": "För Efternamn", "bio": "Kort bio …", "url": "/om-oss/"}. Så länge det är None används redaktionen.
+    "author": None,
+    "home_description": "Guider till spel för två: brädspel, kortspel, konsolspel och appar för par, vänner och syskon – topplistor, julklappstips och co-op.",
     "lang": "sv-SE",       # svenska, riktad mot Sverige
     "country": "SE",
     # Google Analytics 4: byt ut mot ert riktiga mät-ID. Så länge det står XXXXXXX laddas ingen spårning.
@@ -86,7 +90,7 @@ def game_box(m, slug):
     link = f.get("lank") or f.get("länk") or ""
     if not link or link.upper() == "TODO":
         MISSING_LINKS.setdefault(slug, []).append(name)
-        button = '<a class="btn-price is-todo" href="#" aria-disabled="true">Se pris</a>'
+        button = ""  # ingen köplänk än: visa ingen knapp alls (hellre ingen knapp än en död länk)
     else:
         button = f'<a class="btn-price" href="{esc(link)}" rel="sponsored nofollow noopener" target="_blank">Se pris</a>'
     img = f.get("bild", "")
@@ -265,9 +269,11 @@ def card(p, kind="grid"):
     date = f'<time datetime="{p["date"]:%Y-%m-%d}">{sv_date(p["date"])}</time>'
     h = "h2" if kind == "feature" else "h3"
     w = 1400 if kind == "feature" else 800
+    # Utvalt kort på startsidan kan ha en egen rubrik (home_title) så att den inte upprepar artikelns titel
+    heading = p.get("home_title") if kind == "feature" and p.get("home_title") else p["title"]
     return f"""<article class="card card-{kind}"><a href="/{p['slug']}/" class="card-link">
   {thumb(p, w, eager=kind == "feature")}
-  <div class="card-body">{tag(p)}<{h}>{esc(p['title'])}</{h}><p class="excerpt">{esc(p.get('description', ''))}</p><p class="meta">{date} · {p['reading']} min läsning</p></div>
+  <div class="card-body">{tag(p)}<{h}>{esc(heading)}</{h}><p class="excerpt">{esc(p.get('description', ''))}</p><p class="meta">{date} · {p['reading']} min läsning</p></div>
 </a></article>"""
 
 
@@ -288,7 +294,26 @@ def sidebar(posts, current=None):
 </aside>"""
 
 
+def author_name():
+    return SITE["author"]["name"] if SITE.get("author") else "redaktionen"
+
+
+def author_schema():
+    a = SITE.get("author")
+    if a:
+        return {"@type": "Person", "name": a["name"], "url": SITE["url"] + a.get("url", "/om-oss/")}
+    return {"@type": "Organization", "name": SITE["name"]}
+
+
 def author_box():
+    a = SITE.get("author")
+    if a:
+        initials = "".join(w[0] for w in a["name"].split()[:2]).upper()
+        return f"""<aside class="author-box">
+  <div class="author-avatar" aria-hidden="true">{esc(initials)}</div>
+  <div><p class="author-name">Skrivet av {esc(a['name'])}</p>
+  <p>{esc(a['bio'])} <a href="{esc(a.get('url', '/om-oss/'))}">Läs mer om oss och hur vi väljer spel</a>.</p></div>
+</aside>"""
     return """<aside class="author-box">
   <div class="author-avatar" aria-hidden="true">SFT</div>
   <div><p class="author-name">Skrivet av Spel för två-redaktionen</p>
@@ -368,7 +393,7 @@ def build():
             "headline": p["title"], "description": p.get("description", ""),
             "image": image_url(p, 1200), "datePublished": f"{p['date']:%Y-%m-%d}",
             "dateModified": f"{p['updated']:%Y-%m-%d}", "inLanguage": "sv-SE",
-            "author": {"@type": "Organization", "name": SITE["name"]},
+            "author": author_schema(),
             "publisher": {"@type": "Organization", "name": SITE["name"]},
             "mainEntityOfPage": f"{SITE['url']}/{p['slug']}/",
         }, ensure_ascii=False)
@@ -379,7 +404,7 @@ def build():
     <a class="tag t-{p['category']}" href="/kategori/{p['category']}/">{cat}</a>
     <h1>{esc(p['title'])}</h1>
     <p class="lead">{esc(p.get('description', ''))}</p>
-    <p class="meta"><span>Av redaktionen</span><time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time>{f'<span>Uppdaterad <time datetime="{p["updated"]:%Y-%m-%d}">{sv_date(p["updated"])}</time></span>' if p['updated'] > p['date'] else ''}<span>{p['reading']} min läsning</span></p>
+    <p class="meta"><span>Av {esc(author_name())}</span><time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time>{f'<span>Uppdaterad <time datetime="{p["updated"]:%Y-%m-%d}">{sv_date(p["updated"])}</time></span>' if p['updated'] > p['date'] else ''}<span>{p['reading']} min läsning</span></p>
   </header>
   <div class="post-hero">{thumb(p, 1400, eager=True)}</div>
   {notice}
@@ -427,7 +452,7 @@ def build():
              "knowsLanguage": SITE["lang"]},
         ],
     }, ensure_ascii=False)
-    write("/", page(f"{SITE['name']} – guider och tips om spel för två spelare", SITE["tagline"], "/", home,
+    write("/", page(f"{SITE['name']} – guider och tips om spel för två spelare", SITE["home_description"], "/", home,
                     f'<script type="application/ld+json">{site_schema}</script>'))
 
     # Kategorier

@@ -70,7 +70,8 @@ overlap with the main guide and the distans article – check before writing.
 
 ## Workflow rules
 - Always run `python build.py` and check it builds without errors.
-- Show the result (local preview) before publishing.
-- Never commit or push until the owner says OK. When they do, push to main.
+- Always publish: once the build passes, commit and push to main without waiting for an OK
+  (owner's standing instruction, 14 Nov 2026). Then confirm the change on the live site.
+- Never publish facts marked [VERIFIERA] / unverified (see the owner's verification rules).
 - Keep commits small, with clear messages (write the message to a file and use
   `git commit -F` – PowerShell breaks quotes in `-m`).

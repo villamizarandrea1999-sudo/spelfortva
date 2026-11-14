@@ -4,6 +4,7 @@ description: 20 bästa spelen för två: brädspel, kortspel, konsol och mobil. 
 date: 2026-11-14
 category: guider
 image: 1585504198199-20277593b94f
+home_title: Topplistan: 20 favoriter för två spelare
 ---
 Letar ni efter **spel för två**? Det korta svaret: vill ni ha ett strategispel till köksbordet, välj **7 Wonders Duel**. Vill ni ha något lugnt och snabbt som alla kan lära sig, välj **Patchwork**. Och vill ni spela tillsammans på konsol finns det inget bättre än **It Takes Two** och **Split Fiction** – två äventyr som bara går att spela med två.
 
@@ -249,7 +250,7 @@ Stardew Valley är motsatsen till Overcooked: lugnt och mysigt. Ni bygger upp en
 namn: Stardew Valley
 spelare: 1–4
 speltid: Obegränsad
-alder: PEGI 7
+alder: PEGI 12
 passar: Er som vill ha något lugnt att spela lite varje kväll.
 omdome: Mysigt och beroendeframkallande. Inte för er som vill ha action.
 lank: TODO
