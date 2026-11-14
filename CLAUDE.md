@@ -18,7 +18,12 @@ from Swedish game shops.
 - Articles: `content/posts/*.md` with front matter: title, description (max 155 chars),
   date (YYYY-MM-DD), category, sponsored (true/false), image (optional Unsplash id or URL).
 - Pages: `content/pages/*.md` (give them a `date` – used for sitemap lastmod).
-- Homepage intro: `content/home.md`.
+- Homepage intro: `content/home.md` (shown at the bottom of the homepage).
+- Category intros: `content/categories/<slug>.md` (title = H1, description = meta).
+- FAQ sections titled "Vanliga frågor …" with H3 questions automatically get FAQPage JSON-LD
+  (first paragraph after each H3 = answer).
+- Rewritten articles: add `updated: YYYY-MM-DD` (shown on page, sitemap lastmod, dateModified).
+- Page titles get " | Spel för två" only if the total stays ≤ 60 characters; build warns on longer titles.
 - Game boxes in articles: a `:::spel` … `:::` block with namn, spelare, speltid, alder,
   passar, omdome, lank (affiliate link; `TODO` keeps the "Se pris" button inactive).
 - Articles with 4+ H2 headings get an automatic table of contents.
@@ -46,17 +51,22 @@ par: För par · guider: Guider · nyheter: Nyheter
   articles. Never link to articles that don't exist yet.
 - No casino, betting, loans or adult content – ever.
 
-## Article plan (write in this order)
-1. Spel för två – 20 bästa spelen för två spelare | spel för två (1.0K) | guider  ✅
-2. Sällskapsspel för två – bästa brädspelen | sällskapsspel för två (500) | bradspel
-3. Spel för par – roliga spel för dejtkvällen | spel för par (300) | par
-4. Brädspel för två – topplista | brädspel för två (250) | bradspel
-5. PS5-spel för två – bästa co-op i soffan | ps5 spel för två (150) | konsol
-6. Spel för 2 – gratis online | spel för 2 (150) | mobil
-7. Roliga spel för två på mobilen | roliga spel för två på mobilen (100) | mobil
-8. Roliga spel för två – inomhus och utan bräde | roliga spel för två (100) | guider
-9. Spel för två personer – kortspel och klassiker | spel för två personer (90) | bradspel
-10–15. Reviews: 7 Wonders Duel, Patchwork, Jaipur, Codenames Duet, It Takes Two, Split Fiction
+## Article plan
+Done: /spel-for-tva/ (main guide) · /sallskapsspel-for-tva/ (retargeted to "brädspel för två vuxna";
+must NOT reuse games from the main guide) · /co-op-spel-ps5/ (12 games) · /julklapp-spel-for-tva/.
+Full briefs for the next articles: `docs/briefs.md`.
+
+Next, in priority order:
+1. /spel-for-tva-pa-distans/ | mobil
+2. /switch-spel-for-tva/ | konsol
+3. /spel-for-par/ (300) | par – clearly non-adult
+4. Reviews: 7 Wonders Duel, Patchwork, Jaipur, Codenames Duet, It Takes Two, Split Fiction
+
+Dropped/merged (would cannibalize existing pages): "brädspel för två – topplista" → /sallskapsspel-for-tva/;
+"PS5-spel för två" → /co-op-spel-ps5/. Do NOT write card-game or rules guides ("kortspel för två",
+regler) – allakortspel.se, kortspel.se, regler.io etc. own that SERP.
+Other ideas from the original plan (spel för 2 gratis online, roliga spel för två, spel för två personer)
+overlap with the main guide and the distans article – check before writing.
 
 ## Workflow rules
 - Always run `python build.py` and check it builds without errors.
