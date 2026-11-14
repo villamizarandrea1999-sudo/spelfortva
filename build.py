@@ -79,7 +79,9 @@ def game_box(m, slug):
             k, v = line.split(":", 1)
             f[k.strip().lower()] = v.strip()
     name = f.get("namn", "")
-    facts = [("Spelare", f.get("spelare")), ("Speltid", f.get("speltid")), ("Ålder", f.get("alder") or f.get("ålder"))]
+    facts = [("Spelare", f.get("spelare")), ("Speltid", f.get("speltid")), ("Ålder", f.get("alder") or f.get("ålder")),
+             ("Nivå", f.get("niva") or f.get("nivå")), ("Delad skärm", f.get("delad")), ("Online", f.get("online")),
+             ("Friend's Pass", f.get("friendspass"))]
     facts_html = "".join(f"<div><dt>{k}</dt><dd>{esc(v)}</dd></div>" for k, v in facts if v)
     link = f.get("lank") or f.get("länk") or ""
     if not link or link.upper() == "TODO":
@@ -113,6 +115,8 @@ def parse(path):
         body = m.group(2)
     meta["slug"] = meta.get("slug") or path.stem
     meta["date"] = datetime.strptime(meta.get("date", "2026-01-01"), "%Y-%m-%d")
+    # Valfritt: updated: YYYY-MM-DD när en artikel skrivits om (visas i artikeln, sitemap och schema)
+    meta["updated"] = datetime.strptime(meta["updated"], "%Y-%m-%d") if meta.get("updated") else meta["date"]
     meta["category"] = meta.get("category", "nyheter")
     meta["sponsored"] = meta.get("sponsored", "false").lower() == "true"
     meta["image"] = meta.get("image", "")
@@ -293,6 +297,31 @@ def author_box():
 </aside>"""
 
 
+def page_title(title):
+    """Lägg till sajtnamnet bara om hela titeln ryms inom ~60 tecken (det Google visar)."""
+    full = f"{title} | {SITE['name']}"
+    return full if len(full) <= 60 else title
+
+
+def faq_schema(p):
+    """FAQPage-schema från avsnittet 'Vanliga frågor …': varje H3 = fråga, första stycket efter = svar."""
+    m = re.search(r'<h2[^>]*>\s*Vanliga frågor.*?</h2>(.*?)(?=<h2|\Z)', p["html"], re.S)
+    if not m:
+        return ""
+    items = []
+    for q, rest in re.findall(r'<h3[^>]*>(.*?)</h3>(.*?)(?=<h3|\Z)', m.group(1), re.S):
+        a = re.search(r'<p>(.*?)</p>', rest, re.S)
+        if not a:
+            continue
+        text = lambda s: " ".join(html.unescape(re.sub("<[^>]+>", "", s)).split())
+        items.append({"@type": "Question", "name": text(q),
+                      "acceptedAnswer": {"@type": "Answer", "text": text(a.group(1))}})
+    if not items:
+        return ""
+    data = {"@context": "https://schema.org", "@type": "FAQPage", "mainEntity": items}
+    return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
+
+
 def toc_html(p):
     if len(p["toc"]) < 4:  # innehållsförteckning bara för längre artiklar
         return ""
@@ -337,7 +366,8 @@ def build():
         schema = json.dumps({
             "@context": "https://schema.org", "@type": "NewsArticle" if p["category"] == "nyheter" else "Article",
             "headline": p["title"], "description": p.get("description", ""),
-            "image": image_url(p, 1200), "datePublished": f"{p['date']:%Y-%m-%d}", "inLanguage": "sv-SE",
+            "image": image_url(p, 1200), "datePublished": f"{p['date']:%Y-%m-%d}",
+            "dateModified": f"{p['updated']:%Y-%m-%d}", "inLanguage": "sv-SE",
             "author": {"@type": "Organization", "name": SITE["name"]},
             "publisher": {"@type": "Organization", "name": SITE["name"]},
             "mainEntityOfPage": f"{SITE['url']}/{p['slug']}/",
@@ -349,7 +379,7 @@ def build():
     <a class="tag t-{p['category']}" href="/kategori/{p['category']}/">{cat}</a>
     <h1>{esc(p['title'])}</h1>
     <p class="lead">{esc(p.get('description', ''))}</p>
-    <p class="meta"><span>Av redaktionen</span><time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time><span>{p['reading']} min läsning</span></p>
+    <p class="meta"><span>Av redaktionen</span><time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time>{f'<span>Uppdaterad <time datetime="{p["updated"]:%Y-%m-%d}">{sv_date(p["updated"])}</time></span>' if p['updated'] > p['date'] else ''}<span>{p['reading']} min läsning</span></p>
   </header>
   <div class="post-hero">{thumb(p, 1400, eager=True)}</div>
   {notice}
@@ -361,9 +391,11 @@ def build():
 {sidebar(posts, p)}
 </div>
 {'<section class="related">' + section_head('Läs också') + '<div class="grid grid-3">' + "".join(card(q) for q in related) + '</div></section>' if related else ''}"""
-        write(f"/{p['slug']}/", page(f"{p['title']} | {SITE['name']}", p.get("description", ""), f"/{p['slug']}/",
+        if len(p["title"]) > 60:
+            WARNINGS.append(f"{p['slug']}: titeln är {len(p['title'])} tecken (Google visar ca 60)")
+        write(f"/{p['slug']}/", page(page_title(p["title"]), p.get("description", ""), f"/{p['slug']}/",
                                      content, f'<meta property="og:image" content="{esc(image_url(p, 1200))}">\n'
-                                     f'<script type="application/ld+json">{schema}</script>'))
+                                     f'<script type="application/ld+json">{schema}</script>\n{faq_schema(p)}'))
 
     # Startsida: ett utvalt inlägg + rutnät med senaste
     featured = next((p for p in posts if p["slug"] == "spel-for-tva"), posts[0] if posts else None)
@@ -403,8 +435,15 @@ def build():
         items = [p for p in posts if p["category"] == k]
         body = "".join(card(p) for p in items) or '<p class="empty">Inga artiklar ännu – snart här!</p>'
         noindex = "" if items else '<meta name="robots" content="noindex">'  # tom kategori: finns men indexeras inte
-        write(f"/kategori/{k}/", page(f"{v} | {SITE['name']}", f"Guider och tips om {v.lower()} för två spelare.",
-                                      f"/kategori/{k}/", f'<div class="section-head page-head"><h1>{v}</h1></div><div class="grid grid-3">{body}</div>',
+        # Valfri introduktion: content/categories/<slug>.md (title = H1, description = meta)
+        cat_md = ROOT / "content" / "categories" / f"{k}.md"
+        h1, desc, intro_html = v, f"Guider och tips om {v.lower()} för två spelare.", ""
+        if cat_md.exists():
+            c = parse(cat_md)
+            h1, desc = c.get("title", v), c.get("description", desc)
+            intro_html = f'<div class="cat-intro prose">{c["html"]}</div>'
+        write(f"/kategori/{k}/", page(page_title(h1), desc, f"/kategori/{k}/",
+                                      f'<div class="section-head page-head"><h1>{esc(h1)}</h1></div>{intro_html}<div class="grid grid-3">{body}</div>',
                                       noindex))
     for old, target in OLD_CATEGORY_REDIRECTS.items():
         write(f"/kategori/{old}/", redirect_page(target))
@@ -412,7 +451,7 @@ def build():
     # Statiska sidor
     pages = [parse(f) for f in sorted((ROOT / "content/pages").glob("*.md"))]
     for p in pages:
-        write(f"/{p['slug']}/", page(f"{p['title']} | {SITE['name']}", p.get("description", ""), f"/{p['slug']}/",
+        write(f"/{p['slug']}/", page(page_title(p["title"]), p.get("description", ""), f"/{p['slug']}/",
                                      f'<article class="post page"><h1>{esc(p["title"])}</h1><div class="prose">{p["html"]}</div></article>'))
 
     # 404
@@ -429,11 +468,11 @@ def build():
 
     # Sitemap med <lastmod> (utan omdirigeringar och tomma kategorier)
     def newest(items):
-        return max(q["date"] for q in items)
+        return max(q["updated"] for q in items)
     entries = [("/", newest(posts))] if posts else []
     entries += [(f"/kategori/{k}/", newest([p for p in posts if p["category"] == k])) for k in CATEGORIES if k in ACTIVE_CATS]
-    entries += [(f"/{p['slug']}/", p["date"]) for p in posts]
-    entries += [(f"/{p['slug']}/", p["date"]) for p in pages]
+    entries += [(f"/{p['slug']}/", p["updated"]) for p in posts]
+    entries += [(f"/{p['slug']}/", p["updated"]) for p in pages]
     write("/sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
           + "".join(f"<url><loc>{SITE['url']}{u}</loc><lastmod>{d:%Y-%m-%d}</lastmod></url>" for u, d in entries) + "</urlset>")
     write("/robots.txt", f"User-agent: *\nAllow: /\nSitemap: {SITE['url']}/sitemap.xml\n")
