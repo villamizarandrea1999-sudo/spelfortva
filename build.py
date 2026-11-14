@@ -153,6 +153,7 @@ def page(title, description, path, content, extra_head=""):
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{canonical}">
+<meta name="google-site-verification" content="Zprru_ZR1gODB0m-LE_dF5SMq6rU0swovOLRqRPxP6Y">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{canonical}">
