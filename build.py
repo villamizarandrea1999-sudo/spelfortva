@@ -144,12 +144,12 @@ def slugify(value, separator="-"):
 
 
 # ---------- Mallar ----------
-# Logga: två spelkort i solfjäder (det främre en hjärter två) + "Spel för två"
+# Logga: två spelkort (samma som favicon) bredvid textloggan "SPEL FÖR TVÅ"
 LOGO_ICON = """<svg class="logo-icon" viewBox="0 0 62 60" aria-hidden="true"><g transform="rotate(-14 22 34)"><rect x="6" y="10" width="30" height="42" rx="4" fill="#2f7a52"/><rect x="10" y="14" width="22" height="34" rx="2" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/></g><g transform="rotate(10 38 30)"><rect x="22" y="6" width="30" height="42" rx="4" fill="#fff" stroke="#1f1b16" stroke-width="2.5"/><text x="27" y="22" font-family="Playfair Display,Georgia,serif" font-weight="700" font-size="13" fill="#b4532a">2</text><path d="M37 33c-3-3.5-7-1-5 2.5l5 5 5-5c2-3.5-2-6-5-2.5z" fill="#b4532a"/></g></svg>"""
 
 
 def logo(cls="logo"):
-    return f'<a class="{cls}" href="/" aria-label="Spel för två – startsida">{LOGO_ICON}<span class="logo-text">Spel för <em>två</em></span></a>'
+    return f'<a class="{cls}" href="/">{LOGO_ICON}<span>Spel för två</span></a>'
 
 
 def ga_tag():
@@ -377,11 +377,12 @@ def build():
     home_md = ROOT / "content" / "home.md"
     if home_md.exists():
         h = parse(home_md)
-        intro = f'<section class="home-intro"><h1>{esc(h["title"])}</h1><div class="prose">{h["html"]}</div></section>'
-    home = f"""{intro or f'<h1 class="sr-only">{SITE["name"]}</h1>'}
+        intro = f'<section class="home-intro"><h2>{esc(h["title"])}</h2><div class="prose">{h["html"]}</div></section>'
+    home = f"""<h1 class="sr-only">{SITE['name']} – guider och tips om spel för två spelare</h1>
 <section class="featured">{card(featured, "feature") if featured else ""}</section>
 {'<section>' + section_head("Senaste artiklar") + '<div class="grid grid-3">' + "".join(card(p) for p in rest[:12]) + '</div></section>' if rest else ''}
-{sections}"""
+{sections}
+{intro}"""
     site_schema = json.dumps({
         "@context": "https://schema.org",
         "@graph": [
