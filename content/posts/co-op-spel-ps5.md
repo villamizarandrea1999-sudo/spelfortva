@@ -2,7 +2,7 @@
 title: Bästa co-op-spelen till PS5 för två spelare
 description: Spela tillsammans i soffan – här är de bästa co-op-spelen till PS5 med lokal multiplayer för två.
 date: 2026-11-12
-category: co-op
+category: konsol
 image: 1493711662062-fa541adb3fc8
 ---
 Vill ni spela tillsammans på samma skärm? Här är de bästa **co-op-spelen till PS5** med delad skärm eller lokal multiplayer.

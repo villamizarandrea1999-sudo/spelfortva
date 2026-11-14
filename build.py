@@ -8,23 +8,94 @@ import markdown
 SITE = {
     "name": "Spel för två",
     "url": "https://spelfortva.com",
-    "tagline": "Nyheter, tips och guider om spel för två – digitalt och på bordet.",
+    "tagline": "Vi hjälper er att hitta rätt spel för två – brädspel, kortspel, co-op och mobilspel.",
     "lang": "sv",
 }
+# Ordningen här styr menyn
 CATEGORIES = {
-    "nyheter": "Nyheter",
-    "co-op": "Co-op & konsol",
-    "sallskapsspel": "Sällskapsspel",
+    "bradspel": "Brädspel & kortspel",
+    "konsol": "Konsol & PC",
     "mobil": "Mobil & online",
-    "erbjudanden": "Erbjudanden",
+    "par": "För par",
     "guider": "Guider",
+    "nyheter": "Nyheter",
+}
+# Gamla kategoriadresser som redan kan vara indexerade -> ny adress
+OLD_CATEGORY_REDIRECTS = {
+    "co-op": "/kategori/konsol/",
+    "sallskapsspel": "/kategori/bradspel/",
+    "erbjudanden": "/",
+}
+# Standardfoton per kategori (Unsplash, fri licens) när en artikel saknar egen `image:`
+UNSPLASH = "https://images.unsplash.com/photo-"
+CAT_IMAGES = {
+    "bradspel": "1763875067516-e947790c74ac",
+    "konsol": "1509198397868-475647b2a1e5",
+    "mobil": "1564049489314-60d154ff107d",
+    "par": "1629760946220-5693ee4c46ac",
+    "guider": "1585504198199-20277593b94f",
+    "nyheter": "1769288361820-898812b71482",
 }
 ROOT = Path(__file__).parent
 DIST = ROOT / "dist"
 MONTHS = ["januari", "februari", "mars", "april", "maj", "juni", "juli",
           "augusti", "september", "oktober", "november", "december"]
+MAX_DESC = 155
+WARNINGS = []
 
 
+def sv_date(d):
+    return f"{d.day} {MONTHS[d.month - 1]} {d.year}"
+
+
+def esc(s):
+    return html.escape(s or "", quote=True)
+
+
+# ---------- Spelrutor ----------
+# I Markdown:
+# :::spel
+# namn: 7 Wonders Duel
+# spelare: 2
+# speltid: 30 min
+# alder: 10+
+# passar: Er som gillar strategi
+# omdome: Kort omdöme.
+# lank: https://... (affiliate-länk; lämna tom eller TODO tills den finns)
+# bild: (valfritt) Unsplash-id eller URL
+# :::
+GAME_RE = re.compile(r"^:::spel[ \t]*\n(.*?)\n:::[ \t]*$", re.M | re.S)
+
+
+def game_box(m, slug):
+    f = {}
+    for line in m.group(1).splitlines():
+        if ":" in line:
+            k, v = line.split(":", 1)
+            f[k.strip().lower()] = v.strip()
+    name = f.get("namn", "")
+    facts = [("Spelare", f.get("spelare")), ("Speltid", f.get("speltid")), ("Ålder", f.get("alder") or f.get("ålder"))]
+    facts_html = "".join(f"<div><dt>{k}</dt><dd>{esc(v)}</dd></div>" for k, v in facts if v)
+    link = f.get("lank") or f.get("länk") or ""
+    if not link or link.upper() == "TODO":
+        WARNINGS.append(f"{slug}: spelrutan '{name}' saknar köplänk (lank: TODO)")
+        button = '<a class="btn-price is-todo" href="#" aria-disabled="true">Se pris</a>'
+    else:
+        button = f'<a class="btn-price" href="{esc(link)}" rel="sponsored nofollow noopener" target="_blank">Se pris</a>'
+    img = f.get("bild", "")
+    img_html = ""
+    if img:
+        src = img if img.startswith(("http", "/")) else f"{UNSPLASH}{img}?auto=format&fit=crop&w=400&q=75"
+        img_html = f'<div class="gb-img"><img src="{esc(src)}" alt="{esc(name)}" loading="lazy"></div>'
+    suits = f'<p class="gb-suits"><strong>Passar för:</strong> {esc(f["passar"])}</p>' if f.get("passar") else ""
+    verdict = f'<p class="gb-verdict"><strong>Vårt omdöme:</strong> {esc(f["omdome"])}</p>' if f.get("omdome") else ""
+    # Hela rutan på en rad, så att Markdown lämnar den orörd
+    return ("\n\n" + f'<aside class="game-box{" has-img" if img_html else ""}">{img_html}<div class="gb-main">'
+            f'<p class="gb-label">Spelfakta</p><p class="gb-name">{esc(name)}</p>'
+            f'<dl class="gb-facts">{facts_html}</dl>{suits}{verdict}{button}</div></aside>' + "\n\n")
+
+
+# ---------- Inläsning ----------
 def parse(path):
     raw = path.read_text(encoding="utf-8")
     m = re.match(r"^---\n(.*?)\n---\n(.*)$", raw, re.S)
@@ -39,26 +110,35 @@ def parse(path):
     meta["date"] = datetime.strptime(meta.get("date", "2026-01-01"), "%Y-%m-%d")
     meta["category"] = meta.get("category", "nyheter")
     meta["sponsored"] = meta.get("sponsored", "false").lower() == "true"
-    meta["image"] = meta.get("image", "")  # valfri bild-URL, annars färgad platshållare
-    md = markdown.Markdown(extensions=["extra", "toc"])
+    meta["image"] = meta.get("image", "")
+    body = GAME_RE.sub(lambda mm: game_box(mm, meta["slug"]), body)
+    md = markdown.Markdown(extensions=["extra", "toc"], extension_configs={"toc": {"slugify": slugify}})
     body_html = md.convert(body)
     # Sponsrade inlägg: alla externa länkar får rel="sponsored noopener"
     if meta["sponsored"]:
-        body_html = re.sub(r'<a href="(https?://(?!spelfortva\.com)[^"]+)"',
+        body_html = re.sub(r'<a href="(https?://(?!spelfortva\.com)[^"]+)"(?! rel=)',
                            r'<a href="\1" rel="sponsored noopener" target="_blank"', body_html)
     meta["html"] = body_html
-    meta["reading"] = max(1, len(re.sub("<[^>]+>", "", body_html).split()) // 200)
+    meta["toc"] = [t for t in md.toc_tokens if t["level"] == 2] or \
+                  [c for t in md.toc_tokens for c in t.get("children", []) if c["level"] == 2]
+    meta["words"] = len(re.sub("<[^>]+>", " ", body_html).split())
+    meta["reading"] = max(1, meta["words"] // 200)
+    desc = meta.get("description", "")
+    if len(desc) > MAX_DESC:
+        WARNINGS.append(f"{meta['slug']}: description är {len(desc)} tecken (max {MAX_DESC})")
+    if path.parent.name == "posts" and meta["category"] not in CATEGORIES:
+        WARNINGS.append(f"{meta['slug']}: okänd kategori '{meta['category']}'")
     return meta
 
 
-def sv_date(d):
-    return f"{d.day} {MONTHS[d.month - 1]} {d.year}"
+def slugify(value, separator="-"):
+    value = value.lower()
+    for a, b in (("å", "a"), ("ä", "a"), ("ö", "o"), ("é", "e"), ("ü", "u")):
+        value = value.replace(a, b)
+    return re.sub(r"[^a-z0-9]+", separator, value).strip(separator)
 
 
-def esc(s):
-    return html.escape(s, quote=True)
-
-
+# ---------- Mallar ----------
 def page(title, description, path, content, extra_head=""):
     canonical = SITE["url"] + path
     cur = ' aria-current="page"'
@@ -89,7 +169,6 @@ def page(title, description, path, content, extra_head=""):
 <body>
 <header class="masthead">
   <div class="wrap mast-top">
-    <span class="mast-date"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2"/></svg> {sv_date(datetime.now())}</span>
     <a class="btn-sub" href="/rss.xml">Prenumerera</a>
   </div>
   <div class="wrap mast-brand">
@@ -117,50 +196,42 @@ def page(title, description, path, content, extra_head=""):
 </html>"""
 
 
-# Standardfoton per kategori (Unsplash, fri licens) när en artikel saknar egen `image:`
-UNSPLASH = "https://images.unsplash.com/photo-"
-CAT_IMAGES = {
-    "nyheter": "1769288361820-898812b71482",
-    "co-op": "1509198397868-475647b2a1e5",
-    "sallskapsspel": "1763875067516-e947790c74ac",
-    "mobil": "1564049489314-60d154ff107d",
-    "erbjudanden": "1547638375-ebf04735d792",
-    "guider": "1585504198199-20277593b94f",
-}
+def redirect_page(target):
+    url = SITE["url"] + target
+    return f"""<!doctype html><html lang="sv"><head><meta charset="utf-8"><title>Flyttad</title>
+<link rel="canonical" href="{url}"><meta name="robots" content="noindex"><meta http-equiv="refresh" content="0; url={target}">
+</head><body><p>Sidan har flyttat: <a href="{target}">{url}</a></p></body></html>"""
 
 
 def image_url(p, w=800):
     img = p.get("image") or CAT_IMAGES.get(p["category"], "")
     if not img:
         return ""
-    if img.startswith("http") or img.startswith("/"):
+    if img.startswith(("http", "/")):
         return img
     return f"{UNSPLASH}{img}?auto=format&fit=crop&w={w}&q=75"
 
 
 def thumb(p, w=800, eager=False):
-    cat = CATEGORIES.get(p["category"], p["category"])
     url = image_url(p, w)
-    if url:
-        lazy = "" if eager else ' loading="lazy"'
-        return f'<div class="thumb"><img src="{esc(url)}" alt="{esc(p["title"])}"{lazy}></div>'
-    return f'<div class="thumb ph ph-{p["category"]}" aria-hidden="true"><span>{cat}</span></div>'
+    if not url:
+        return f'<div class="thumb ph" aria-hidden="true"><span>{esc(CATEGORIES.get(p["category"], ""))}</span></div>'
+    lazy = "" if eager else ' loading="lazy"'
+    return f'<div class="thumb"><img src="{esc(url)}" alt="{esc(p["title"])}"{lazy}></div>'
+
+
+def tag(p):
+    return f'<span class="tag t-{p["category"]}">{esc(CATEGORIES.get(p["category"], p["category"]))}</span>'
 
 
 def card(p, kind="grid"):
-    """kind: grid (bild + utdrag), side (bild utan utdrag), mini (lista med liten bild), feature (stor)."""
-    cat = CATEGORIES.get(p["category"], p["category"])
+    """kind: grid (standardkort) eller feature (stort utvalt kort på startsidan)."""
     date = f'<time datetime="{p["date"]:%Y-%m-%d}">{sv_date(p["date"])}</time>'
-    kicker = f'<span class="kicker k-{p["category"]}">{cat}</span>'
     h = "h2" if kind == "feature" else "h3"
-    excerpt = f'<p>{esc(p.get("description", ""))}</p>' if kind in ("grid", "feature") else ""
-    if kind == "mini":
-        return f"""<article class="card mini"><a href="/{p['slug']}/" class="card-link">
-  <div class="mini-text"><h3>{esc(p['title'])}</h3>{date}</div>{thumb(p)}</a></article>"""
     w = 1400 if kind == "feature" else 800
     return f"""<article class="card card-{kind}"><a href="/{p['slug']}/" class="card-link">
   {thumb(p, w, eager=kind == "feature")}
-  <div class="card-body">{kicker}<{h}>{esc(p['title'])}</{h}>{excerpt}<p class="meta">{date} · {p['reading']} min</p></div>
+  <div class="card-body">{tag(p)}<{h}>{esc(p['title'])}</{h}><p class="excerpt">{esc(p.get('description', ''))}</p><p class="meta">{date} · {p['reading']} min läsning</p></div>
 </a></article>"""
 
 
@@ -170,15 +241,24 @@ def sidebar(posts, current=None):
   <span class="pop-text"><strong>{esc(q['title'])}</strong><time datetime="{q['date']:%Y-%m-%d}">{sv_date(q['date'])}</time></span>
   {thumb(q, 240)}</a></li>""" for i, q in enumerate(latest, 1))
     counts = {k: sum(q["category"] == k for q in posts) for k in CATEGORIES}
-    cats = "".join(f'<li><a href="/kategori/{k}/"><span class="dot k-{k}"></span>{v}<span class="count">{counts[k]}</span></a></li>'
+    cats = "".join(f'<li><a href="/kategori/{k}/"><span class="dot t-{k}"></span>{v}<span class="count">{counts[k]}</span></a></li>'
                    for k, v in CATEGORIES.items())
     pop = f'<div class="widget"><h2 class="widget-title">Senaste artiklar</h2><ol class="pop">{items}</ol></div>' if latest else ""
     return f"""<aside class="sidebar">{pop}
   <div class="widget"><h2 class="widget-title">Kategorier</h2><ul class="cat-list">{cats}</ul></div>
   <div class="widget widget-about"><h2 class="widget-title">Om sajten</h2>
-    <p>Vi skriver om spel som blir roligare när man är två – brädspel, kortspel, co-op och mobilspel.</p>
-    <a class="btn-sub" href="/rss.xml">Prenumerera via RSS</a></div>
+    <p>Vi jämför spel för två och berättar vem varje spel passar för – så att ni slipper chansa i butiken.</p>
+    <a class="btn-sub" href="/om-oss/">Läs mer om oss</a></div>
 </aside>"""
+
+
+def toc_html(p):
+    if len(p["toc"]) < 4:  # innehållsförteckning bara för längre artiklar
+        return ""
+    # Listan numreras själv, så ta bort "1. " i rubriker som redan är numrerade
+    names = [re.sub(r"^\d+\.\s*", "", html.unescape(t["name"])) for t in p["toc"]]
+    items = "".join(f'<li><a href="#{t["id"]}">{esc(n)}</a></li>' for t, n in zip(p["toc"], names))
+    return f'<details class="toc" open><summary>Innehåll</summary><ol>{items}</ol></details>'
 
 
 def section_head(title, href=None):
@@ -192,6 +272,7 @@ def write(path, text):
     out.write_text(text, encoding="utf-8")
 
 
+# ---------- Bygge ----------
 def build():
     if DIST.exists():
         shutil.rmtree(DIST)
@@ -205,15 +286,15 @@ def build():
     posts = [p for p in posts if p["date"] <= today]  # framtida datum publiceras automatiskt senare
 
     # Artiklar
-    for i, p in enumerate(posts):
+    for p in posts:
         cat = CATEGORIES.get(p["category"], p["category"])
-        related = [q for q in posts if q["category"] == p["category"] and q is not p][:3]
-        rel_html = "".join(card(q) for q in related)
+        same = [q for q in posts if q["category"] == p["category"] and q is not p]
+        related = (same + [q for q in posts if q is not p and q not in same])[:3]
         notice = '<p class="sponsored-note">Samarbete: Detta inlägg innehåller sponsrade länkar.</p>' if p["sponsored"] else ""
         schema = json.dumps({
             "@context": "https://schema.org", "@type": "NewsArticle" if p["category"] == "nyheter" else "Article",
             "headline": p["title"], "description": p.get("description", ""),
-            "datePublished": f"{p['date']:%Y-%m-%d}", "inLanguage": "sv-SE",
+            "image": image_url(p, 1200), "datePublished": f"{p['date']:%Y-%m-%d}", "inLanguage": "sv-SE",
             "author": {"@type": "Organization", "name": SITE["name"]},
             "publisher": {"@type": "Organization", "name": SITE["name"]},
             "mainEntityOfPage": f"{SITE['url']}/{p['slug']}/",
@@ -221,67 +302,57 @@ def build():
         content = f"""<nav class="crumbs" aria-label="Brödsmulor"><a href="/">Start</a> / <a href="/kategori/{p['category']}/">{cat}</a> / <span>{esc(p['title'])}</span></nav>
 <div class="post-layout">
 <article class="post">
-  <div class="post-hero">{thumb(p, 1400, eager=True)}</div>
   <header class="post-head">
-    <a class="cat-badge" href="/kategori/{p['category']}/">{cat}</a>
+    <a class="tag t-{p['category']}" href="/kategori/{p['category']}/">{cat}</a>
     <h1>{esc(p['title'])}</h1>
+    <p class="lead">{esc(p.get('description', ''))}</p>
     <p class="meta"><span>Av redaktionen</span><time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time><span>{p['reading']} min läsning</span></p>
   </header>
-  <p class="lead">{esc(p.get('description', ''))}</p>
+  <div class="post-hero">{thumb(p, 1400, eager=True)}</div>
   {notice}
+  {toc_html(p)}
   <div class="prose">{p['html']}</div>
   <footer class="post-foot"><span>Kategori:</span> <a href="/kategori/{p['category']}/">{cat}</a></footer>
 </article>
 {sidebar(posts, p)}
 </div>
-{'<section class="related">' + section_head('Läs också') + '<div class="grid">' + rel_html + '</div></section>' if related else ''}"""
+{'<section class="related">' + section_head('Läs också') + '<div class="grid grid-3">' + "".join(card(q) for q in related) + '</div></section>' if related else ''}"""
         write(f"/{p['slug']}/", page(f"{p['title']} | {SITE['name']}", p.get("description", ""), f"/{p['slug']}/",
                                      content, f'<meta property="og:image" content="{esc(image_url(p, 1200))}">\n'
                                      f'<script type="application/ld+json">{schema}</script>'))
 
-    # Startsida
-    feature = card(posts[0], "feature") if posts else ""
-    side = "".join(card(p, "side") for p in posts[1:3])
-    latest = posts[3:8]
-    if latest:
-        right = '<h2 class="rail-title">Senaste</h2>' + "".join(card(p, "mini") for p in latest)
-    else:  # få artiklar ännu: visa kategorierna i högerspalten
-        counts = {k: sum(p["category"] == k for p in posts) for k in CATEGORIES}
-        right = '<h2 class="rail-title">Kategorier</h2><ul class="cat-list">' + "".join(
-            f'<li><a href="/kategori/{k}/"><span class="dot k-{k}"></span>{v}<span class="count">{counts[k]}</span></a></li>'
-            for k, v in CATEGORIES.items()) + "</ul>"
+    # Startsida: ett utvalt inlägg + rutnät med senaste
+    featured = next((p for p in posts if p["slug"] == "spel-for-tva"), posts[0] if posts else None)
+    rest = [p for p in posts if p is not featured]
     sections = ""
-    if posts[3:]:
-        sections += f'<section class="cat-section">{section_head("Fler artiklar")}<div class="grid">{"".join(card(p) for p in posts[3:11])}</div></section>'
     for k, v in CATEGORIES.items():
-        items = [p for p in posts if p["category"] == k][:4]
-        if len(items) >= 4:  # egna kategorisektioner först när det finns tillräckligt att fylla dem
-            sections += f'<section class="cat-section">{section_head(v, f"/kategori/{k}/")}<div class="grid">{"".join(card(p) for p in items)}</div></section>'
-    home = f"""<h1 class="sr-only">{SITE['name']} – nyheter, tips och guider om spel för två</h1>
-<section class="top-stories">
-  <div class="col-side">{side}</div>
-  <div class="col-feature">{feature}</div>
-  <aside class="col-rail">{right}</aside>
-</section>
+        items = [p for p in posts if p["category"] == k][:3]
+        if len(items) >= 3:  # kategorisektioner först när det finns tillräckligt att fylla dem
+            sections += f'<section class="cat-section">{section_head(v, f"/kategori/{k}/")}<div class="grid grid-3">{"".join(card(p) for p in items)}</div></section>'
+    home = f"""<h1 class="sr-only">{SITE['name']} – guider och tips om spel för två spelare</h1>
+<section class="featured">{card(featured, "feature") if featured else ""}</section>
+{'<section>' + section_head("Senaste artiklar") + '<div class="grid grid-3">' + "".join(card(p) for p in rest[:12]) + '</div></section>' if rest else ''}
 {sections}"""
-    write("/", page(f"{SITE['name']} – nyheter, tips och guider om spel för två", SITE["tagline"], "/", home))
+    write("/", page(f"{SITE['name']} – guider och tips om spel för två spelare", SITE["tagline"], "/", home))
 
     # Kategorier
     for k, v in CATEGORIES.items():
         items = [p for p in posts if p["category"] == k]
         body = "".join(card(p) for p in items) or '<p class="empty">Inga artiklar ännu – snart här!</p>'
-        write(f"/kategori/{k}/", page(f"{v} | {SITE['name']}", f"Allt om {v.lower()} för två spelare.",
-                                      f"/kategori/{k}/", f'<div class="section-head page-head"><h1>{v}</h1></div><div class="grid">{body}</div>'))
+        write(f"/kategori/{k}/", page(f"{v} | {SITE['name']}", f"Guider och tips om {v.lower()} för två spelare.",
+                                      f"/kategori/{k}/", f'<div class="section-head page-head"><h1>{v}</h1></div><div class="grid grid-3">{body}</div>'))
+    for old, target in OLD_CATEGORY_REDIRECTS.items():
+        write(f"/kategori/{old}/", redirect_page(target))
 
     # Statiska sidor
-    for f in sorted((ROOT / "content/pages").glob("*.md")):
-        p = parse(f)
+    pages = [parse(f) for f in sorted((ROOT / "content/pages").glob("*.md"))]
+    for p in pages:
         write(f"/{p['slug']}/", page(f"{p['title']} | {SITE['name']}", p.get("description", ""), f"/{p['slug']}/",
-                                     f'<article class="post"><h1>{esc(p["title"])}</h1><div class="prose">{p["html"]}</div></article>'))
+                                     f'<article class="post page"><h1>{esc(p["title"])}</h1><div class="prose">{p["html"]}</div></article>'))
 
     # 404
     (DIST / "404.html").write_text(page("Sidan finns inte | " + SITE["name"], "Sidan hittades inte.", "/404.html",
-        '<div class="post"><h1>Hoppsan! Sidan finns inte.</h1><p><a href="/">Tillbaka till startsidan</a></p></div>'), encoding="utf-8")
+        '<div class="post page"><h1>Hoppsan! Sidan finns inte.</h1><p><a href="/">Tillbaka till startsidan</a></p></div>'), encoding="utf-8")
 
     # RSS
     items = "".join(f"""<item><title>{esc(p['title'])}</title><link>{SITE['url']}/{p['slug']}/</link>
@@ -291,13 +362,15 @@ def build():
 <rss version="2.0"><channel><title>{SITE['name']}</title><link>{SITE['url']}</link>
 <description>{SITE['tagline']}</description><language>sv-SE</language>{items}</channel></rss>""")
 
-    # Sitemap
-    urls = ["/"] + [f"/kategori/{k}/" for k in CATEGORIES] + [f"/{p['slug']}/" for p in posts] + \
-           [f"/{parse(f)['slug']}/" for f in (ROOT / "content/pages").glob("*.md")]
+    # Sitemap (utan omdirigeringar)
+    urls = ["/"] + [f"/kategori/{k}/" for k in CATEGORIES] + [f"/{p['slug']}/" for p in posts] + [f"/{p['slug']}/" for p in pages]
     write("/sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
           + "".join(f"<url><loc>{SITE['url']}{u}</loc></url>" for u in urls) + "</urlset>")
     write("/robots.txt", f"User-agent: *\nAllow: /\nSitemap: {SITE['url']}/sitemap.xml\n")
+
     print(f"Byggt: {len(posts)} artiklar -> {DIST}")
+    for w in WARNINGS:
+        print("  VARNING:", w)
 
 
 if __name__ == "__main__":
