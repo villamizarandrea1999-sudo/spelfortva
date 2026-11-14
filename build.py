@@ -82,19 +82,19 @@ def page(title, description, path, content, extra_head=""):
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 {extra_head}
 </head>
 <body>
 <header class="masthead">
   <div class="wrap mast-top">
-    <span>Nyheter · Tips · Guider</span>
+    <span class="mast-date"><svg viewBox="0 0 24 24" width="13" height="13" aria-hidden="true"><circle cx="12" cy="12" r="9" fill="none" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 2" fill="none" stroke="currentColor" stroke-width="2"/></svg> {sv_date(datetime.now())}</span>
     <a class="btn-sub" href="/rss.xml">Prenumerera</a>
   </div>
   <div class="wrap mast-brand">
     <a class="logo" href="/">Spel för två</a>
-    <p class="mast-tag">{SITE['tagline']}</p>
+    <p class="mast-tag"><span class="orn">~</span> Brädspel / Kortspel / Co-op / Mobil <span class="orn">~</span></p>
   </div>
   <nav class="nav" aria-label="Kategorier"><div class="wrap nav-inner">{nav}</div></nav>
 </header>
@@ -164,6 +164,23 @@ def card(p, kind="grid"):
 </a></article>"""
 
 
+def sidebar(posts, current=None):
+    latest = [q for q in posts if q is not current][:5]
+    items = "".join(f"""<li><a href="/{q['slug']}/"><span class="num">{i}.</span>
+  <span class="pop-text"><strong>{esc(q['title'])}</strong><time datetime="{q['date']:%Y-%m-%d}">{sv_date(q['date'])}</time></span>
+  {thumb(q, 240)}</a></li>""" for i, q in enumerate(latest, 1))
+    counts = {k: sum(q["category"] == k for q in posts) for k in CATEGORIES}
+    cats = "".join(f'<li><a href="/kategori/{k}/"><span class="dot k-{k}"></span>{v}<span class="count">{counts[k]}</span></a></li>'
+                   for k, v in CATEGORIES.items())
+    pop = f'<div class="widget"><h2 class="widget-title">Senaste artiklar</h2><ol class="pop">{items}</ol></div>' if latest else ""
+    return f"""<aside class="sidebar">{pop}
+  <div class="widget"><h2 class="widget-title">Kategorier</h2><ul class="cat-list">{cats}</ul></div>
+  <div class="widget widget-about"><h2 class="widget-title">Om sajten</h2>
+    <p>Vi skriver om spel som blir roligare när man är två – brädspel, kortspel, co-op och mobilspel.</p>
+    <a class="btn-sub" href="/rss.xml">Prenumerera via RSS</a></div>
+</aside>"""
+
+
 def section_head(title, href=None):
     more = f'<a class="more" href="{href}">Visa alla ›</a>' if href else ""
     return f'<div class="section-head"><h2>{title}</h2>{more}</div>'
@@ -201,18 +218,22 @@ def build():
             "publisher": {"@type": "Organization", "name": SITE["name"]},
             "mainEntityOfPage": f"{SITE['url']}/{p['slug']}/",
         }, ensure_ascii=False)
-        content = f"""<article class="post">
+        content = f"""<nav class="crumbs" aria-label="Brödsmulor"><a href="/">Start</a> / <a href="/kategori/{p['category']}/">{cat}</a> / <span>{esc(p['title'])}</span></nav>
+<div class="post-layout">
+<article class="post">
+  <div class="post-hero">{thumb(p, 1400, eager=True)}</div>
   <header class="post-head">
-    <nav class="crumbs"><a href="/">Start</a> › <a href="/kategori/{p['category']}/">{cat}</a></nav>
-    <span class="kicker k-{p['category']}">{cat}</span>
+    <a class="cat-badge" href="/kategori/{p['category']}/">{cat}</a>
     <h1>{esc(p['title'])}</h1>
-    <p class="lead">{esc(p.get('description', ''))}</p>
-    <p class="meta">Av redaktionen · <time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time> · {p['reading']} min läsning</p>
+    <p class="meta"><span>Av redaktionen</span><time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time><span>{p['reading']} min läsning</span></p>
   </header>
-  <div class="post-hero">{thumb(p, 1600, eager=True)}</div>
+  <p class="lead">{esc(p.get('description', ''))}</p>
   {notice}
   <div class="prose">{p['html']}</div>
+  <footer class="post-foot"><span>Kategori:</span> <a href="/kategori/{p['category']}/">{cat}</a></footer>
 </article>
+{sidebar(posts, p)}
+</div>
 {'<section class="related">' + section_head('Läs också') + '<div class="grid">' + rel_html + '</div></section>' if related else ''}"""
         write(f"/{p['slug']}/", page(f"{p['title']} | {SITE['name']}", p.get("description", ""), f"/{p['slug']}/",
                                      content, f'<meta property="og:image" content="{esc(image_url(p, 1200))}">\n'
