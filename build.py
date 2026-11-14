@@ -9,8 +9,12 @@ SITE = {
     "name": "Spel för två",
     "url": "https://spelfortva.com",
     "tagline": "Vi hjälper er att hitta rätt spel för två – brädspel, kortspel, co-op och mobilspel.",
-    "lang": "sv",
+    "lang": "sv-SE",       # svenska, riktad mot Sverige
+    "country": "SE",
+    # Google Analytics 4: byt ut mot ert riktiga mät-ID. Så länge det står XXXXXXX laddas ingen spårning.
+    "ga_id": "G-XXXXXXX",
 }
+ACTIVE_CATS = set()  # kategorier med minst en publicerad artikel (sätts i build())
 # Ordningen här styr menyn
 CATEGORIES = {
     "bradspel": "Brädspel & kortspel",
@@ -42,6 +46,7 @@ MONTHS = ["januari", "februari", "mars", "april", "maj", "juni", "juli",
           "augusti", "september", "oktober", "november", "december"]
 MAX_DESC = 155
 WARNINGS = []
+MISSING_LINKS = {}  # artikel -> spelrutor utan köplänk
 
 
 def sv_date(d):
@@ -78,7 +83,7 @@ def game_box(m, slug):
     facts_html = "".join(f"<div><dt>{k}</dt><dd>{esc(v)}</dd></div>" for k, v in facts if v)
     link = f.get("lank") or f.get("länk") or ""
     if not link or link.upper() == "TODO":
-        WARNINGS.append(f"{slug}: spelrutan '{name}' saknar köplänk (lank: TODO)")
+        MISSING_LINKS.setdefault(slug, []).append(name)
         button = '<a class="btn-price is-todo" href="#" aria-disabled="true">Se pris</a>'
     else:
         button = f'<a class="btn-price" href="{esc(link)}" rel="sponsored nofollow noopener" target="_blank">Se pris</a>'
@@ -139,11 +144,28 @@ def slugify(value, separator="-"):
 
 
 # ---------- Mallar ----------
+# Logga: två spelkort i solfjäder (det främre en hjärter två) + "Spel för två"
+LOGO_ICON = """<svg class="logo-icon" viewBox="0 0 62 60" aria-hidden="true"><g transform="rotate(-14 22 34)"><rect x="6" y="10" width="30" height="42" rx="4" fill="#2f7a52"/><rect x="10" y="14" width="22" height="34" rx="2" fill="none" stroke="#fff" stroke-opacity=".5" stroke-width="1.5"/></g><g transform="rotate(10 38 30)"><rect x="22" y="6" width="30" height="42" rx="4" fill="#fff" stroke="#1f1b16" stroke-width="2.5"/><text x="27" y="22" font-family="Playfair Display,Georgia,serif" font-weight="700" font-size="13" fill="#b4532a">2</text><path d="M37 33c-3-3.5-7-1-5 2.5l5 5 5-5c2-3.5-2-6-5-2.5z" fill="#b4532a"/></g></svg>"""
+
+
+def logo(cls="logo"):
+    return f'<a class="{cls}" href="/" aria-label="Spel för två – startsida">{LOGO_ICON}<span class="logo-text">Spel för <em>två</em></span></a>'
+
+
+def ga_tag():
+    gid = SITE["ga_id"]
+    if "XXXX" in gid:
+        return "<!-- GA4: sätt SITE['ga_id'] i build.py till ert mät-ID (G-...) så läggs taggen in här -->"
+    return f"""<script async src="https://www.googletagmanager.com/gtag/js?id={gid}"></script>
+<script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','{gid}');</script>"""
+
+
 def page(title, description, path, content, extra_head=""):
     canonical = SITE["url"] + path
     cur = ' aria-current="page"'
     nav = f'<a href="/"{cur if path == "/" else ""}>Start</a>' + "".join(
-        f'<a href="/kategori/{k}/"{cur if path == f"/kategori/{k}/" else ""}>{v}</a>' for k, v in CATEGORIES.items())
+        f'<a href="/kategori/{k}/"{cur if path == f"/kategori/{k}/" else ""}>{v}</a>'
+        for k, v in CATEGORIES.items() if k in ACTIVE_CATS)
     year = datetime.now().year
     return f"""<!doctype html>
 <html lang="{SITE['lang']}">
@@ -153,6 +175,12 @@ def page(title, description, path, content, extra_head=""):
 <title>{esc(title)}</title>
 <meta name="description" content="{esc(description)}">
 <link rel="canonical" href="{canonical}">
+<!-- Språk och marknad: svenska (sv-SE), riktat mot Sverige -->
+<link rel="alternate" hreflang="sv-SE" href="{canonical}">
+<link rel="alternate" hreflang="x-default" href="{canonical}">
+<meta http-equiv="content-language" content="sv-SE">
+<meta name="geo.region" content="SE">
+<meta name="geo.placename" content="Sverige">
 <meta name="google-site-verification" content="Zprru_ZR1gODB0m-LE_dF5SMq6rU0swovOLRqRPxP6Y">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
@@ -160,20 +188,23 @@ def page(title, description, path, content, extra_head=""):
 <meta property="og:locale" content="sv_SE">
 <meta property="og:site_name" content="{SITE['name']}">
 <link rel="alternate" type="application/rss+xml" title="{SITE['name']}" href="/rss.xml">
+<link rel="icon" href="/favicon.ico" sizes="48x48">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
+{ga_tag()}
 {extra_head}
 </head>
 <body>
 <header class="masthead">
   <div class="wrap mast-top">
-    <a class="btn-sub" href="/rss.xml">Prenumerera</a>
+    <a class="btn-sub" href="/kontakt/">Prenumerera</a>
   </div>
   <div class="wrap mast-brand">
-    <a class="logo" href="/">Spel för två</a>
+    {logo()}
     <p class="mast-tag"><span class="orn">~</span> Brädspel / Kortspel / Co-op / Mobil <span class="orn">~</span></p>
   </div>
   <nav class="nav" aria-label="Kategorier"><div class="wrap nav-inner">{nav}</div></nav>
@@ -183,7 +214,7 @@ def page(title, description, path, content, extra_head=""):
 </main>
 <footer class="foot">
   <div class="wrap foot-inner">
-    <div><a class="logo small" href="/">Spel för två</a>
+    <div>{logo("logo small")}
     <p>{SITE['tagline']}</p></div>
     <div class="foot-links">
       <a href="/om-oss/">Om oss</a><a href="/skriv-for-oss/">Skriv för oss</a>
@@ -243,13 +274,22 @@ def sidebar(posts, current=None):
   {thumb(q, 240)}</a></li>""" for i, q in enumerate(latest, 1))
     counts = {k: sum(q["category"] == k for q in posts) for k in CATEGORIES}
     cats = "".join(f'<li><a href="/kategori/{k}/"><span class="dot t-{k}"></span>{v}<span class="count">{counts[k]}</span></a></li>'
-                   for k, v in CATEGORIES.items())
+                   for k, v in CATEGORIES.items() if k in ACTIVE_CATS)
     pop = f'<div class="widget"><h2 class="widget-title">Senaste artiklar</h2><ol class="pop">{items}</ol></div>' if latest else ""
     return f"""<aside class="sidebar">{pop}
   <div class="widget"><h2 class="widget-title">Kategorier</h2><ul class="cat-list">{cats}</ul></div>
   <div class="widget widget-about"><h2 class="widget-title">Om sajten</h2>
     <p>Vi jämför spel för två och berättar vem varje spel passar för – så att ni slipper chansa i butiken.</p>
     <a class="btn-sub" href="/om-oss/">Läs mer om oss</a></div>
+</aside>"""
+
+
+def author_box():
+    return """<aside class="author-box">
+  <div class="author-avatar" aria-hidden="true">SFT</div>
+  <div><p class="author-name">Skrivet av Spel för två-redaktionen</p>
+  <p>Vi jämför brädspel, kortspel, konsolspel och appar för två spelare och berättar vem varje spel passar för.
+  <a href="/om-oss/">Läs mer om oss och hur vi väljer spel</a>.</p></div>
 </aside>"""
 
 
@@ -285,6 +325,8 @@ def build():
                    key=lambda p: p["date"], reverse=True)
     today = datetime.now()
     posts = [p for p in posts if p["date"] <= today]  # framtida datum publiceras automatiskt senare
+    ACTIVE_CATS.clear()
+    ACTIVE_CATS.update(p["category"] for p in posts)  # tomma kategorier döljs i meny, sidopanel och sitemap
 
     # Artiklar
     for p in posts:
@@ -314,6 +356,7 @@ def build():
   {toc_html(p)}
   <div class="prose">{p['html']}</div>
   <footer class="post-foot"><span>Kategori:</span> <a href="/kategori/{p['category']}/">{cat}</a></footer>
+  {author_box()}
 </article>
 {sidebar(posts, p)}
 </div>
@@ -330,18 +373,38 @@ def build():
         items = [p for p in posts if p["category"] == k][:3]
         if len(items) >= 3:  # kategorisektioner först när det finns tillräckligt att fylla dem
             sections += f'<section class="cat-section">{section_head(v, f"/kategori/{k}/")}<div class="grid grid-3">{"".join(card(p) for p in items)}</div></section>'
-    home = f"""<h1 class="sr-only">{SITE['name']} – guider och tips om spel för två spelare</h1>
+    intro = ""
+    home_md = ROOT / "content" / "home.md"
+    if home_md.exists():
+        h = parse(home_md)
+        intro = f'<section class="home-intro"><h1>{esc(h["title"])}</h1><div class="prose">{h["html"]}</div></section>'
+    home = f"""{intro or f'<h1 class="sr-only">{SITE["name"]}</h1>'}
 <section class="featured">{card(featured, "feature") if featured else ""}</section>
 {'<section>' + section_head("Senaste artiklar") + '<div class="grid grid-3">' + "".join(card(p) for p in rest[:12]) + '</div></section>' if rest else ''}
 {sections}"""
-    write("/", page(f"{SITE['name']} – guider och tips om spel för två spelare", SITE["tagline"], "/", home))
+    site_schema = json.dumps({
+        "@context": "https://schema.org",
+        "@graph": [
+            {"@type": "WebSite", "@id": f"{SITE['url']}/#website", "url": f"{SITE['url']}/", "name": SITE["name"],
+             "description": SITE["tagline"], "inLanguage": SITE["lang"],
+             "publisher": {"@id": f"{SITE['url']}/#organization"}},
+            {"@type": "Organization", "@id": f"{SITE['url']}/#organization", "name": SITE["name"],
+             "url": f"{SITE['url']}/", "logo": f"{SITE['url']}/icon-192.png",
+             "areaServed": {"@type": "Country", "name": "Sverige", "identifier": SITE["country"]},
+             "knowsLanguage": SITE["lang"]},
+        ],
+    }, ensure_ascii=False)
+    write("/", page(f"{SITE['name']} – guider och tips om spel för två spelare", SITE["tagline"], "/", home,
+                    f'<script type="application/ld+json">{site_schema}</script>'))
 
     # Kategorier
     for k, v in CATEGORIES.items():
         items = [p for p in posts if p["category"] == k]
         body = "".join(card(p) for p in items) or '<p class="empty">Inga artiklar ännu – snart här!</p>'
+        noindex = "" if items else '<meta name="robots" content="noindex">'  # tom kategori: finns men indexeras inte
         write(f"/kategori/{k}/", page(f"{v} | {SITE['name']}", f"Guider och tips om {v.lower()} för två spelare.",
-                                      f"/kategori/{k}/", f'<div class="section-head page-head"><h1>{v}</h1></div><div class="grid grid-3">{body}</div>'))
+                                      f"/kategori/{k}/", f'<div class="section-head page-head"><h1>{v}</h1></div><div class="grid grid-3">{body}</div>',
+                                      noindex))
     for old, target in OLD_CATEGORY_REDIRECTS.items():
         write(f"/kategori/{old}/", redirect_page(target))
 
@@ -363,15 +426,22 @@ def build():
 <rss version="2.0"><channel><title>{SITE['name']}</title><link>{SITE['url']}</link>
 <description>{SITE['tagline']}</description><language>sv-SE</language>{items}</channel></rss>""")
 
-    # Sitemap (utan omdirigeringar)
-    urls = ["/"] + [f"/kategori/{k}/" for k in CATEGORIES] + [f"/{p['slug']}/" for p in posts] + [f"/{p['slug']}/" for p in pages]
+    # Sitemap med <lastmod> (utan omdirigeringar och tomma kategorier)
+    def newest(items):
+        return max(q["date"] for q in items)
+    entries = [("/", newest(posts))] if posts else []
+    entries += [(f"/kategori/{k}/", newest([p for p in posts if p["category"] == k])) for k in CATEGORIES if k in ACTIVE_CATS]
+    entries += [(f"/{p['slug']}/", p["date"]) for p in posts]
+    entries += [(f"/{p['slug']}/", p["date"]) for p in pages]
     write("/sitemap.xml", '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'
-          + "".join(f"<url><loc>{SITE['url']}{u}</loc></url>" for u in urls) + "</urlset>")
+          + "".join(f"<url><loc>{SITE['url']}{u}</loc><lastmod>{d:%Y-%m-%d}</lastmod></url>" for u, d in entries) + "</urlset>")
     write("/robots.txt", f"User-agent: *\nAllow: /\nSitemap: {SITE['url']}/sitemap.xml\n")
 
     print(f"Byggt: {len(posts)} artiklar -> {DIST}")
     for w in WARNINGS:
         print("  VARNING:", w)
+    for slug, names in MISSING_LINKS.items():
+        print(f"  TODO: {slug}: {len(names)} spelrutor saknar köplänk ({', '.join(names[:3])}{' …' if len(names) > 3 else ''})")
 
 
 if __name__ == "__main__":
