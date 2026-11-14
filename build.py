@@ -190,6 +190,7 @@ def page(title, description, path, content, extra_head=""):
 <meta name="geo.region" content="SE">
 <meta name="geo.placename" content="Sverige">
 <meta name="google-site-verification" content="Zprru_ZR1gODB0m-LE_dF5SMq6rU0swovOLRqRPxP6Y">
+<meta name="google-site-verification" content="I1RhgXVY6W6usKxYv5zp2bj4XfguUQC7Zv__YNJBrbc">
 <meta property="og:title" content="{esc(title)}">
 <meta property="og:description" content="{esc(description)}">
 <meta property="og:url" content="{canonical}">
