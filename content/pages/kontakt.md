@@ -1,6 +1,7 @@
 ---
 title: Kontakt
 description: Kontakta Spel för två.
+date: 2026-11-14
 ---
 Har du tips, frågor eller vill samarbeta? Skriv till oss här.
 

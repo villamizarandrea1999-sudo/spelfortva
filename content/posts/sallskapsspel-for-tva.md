@@ -5,7 +5,7 @@ date: 2026-11-13
 category: bradspel
 image: 1677188010559-0667a1ed33a0
 ---
-Många brädspel kräver fyra spelare, men det finns gott om **sällskapsspel för två** som är minst lika roliga.
+Många brädspel kräver fyra spelare, men det finns gott om **sällskapsspel för två** som är minst lika roliga. Vill ni även ha tips på konsolspel och appar, läs vår stora guide [Spel för två – 20 bästa spelen för två spelare](/spel-for-tva/).
 
 ## 1. 7 Wonders Duel
 Bygg en civilisation och tävla om att vinna militärt, vetenskapligt eller med poäng. Ett av de mest populära tvåpersonersspelen.
@@ -63,3 +63,5 @@ Vackert spel där ni lägger kakel. Lätt att lära, svårt att bemästra.
 
 ## Tips
 Börja med Patchwork eller Jaipur om ni är nya – de tar bara några minuter att lära sig.
+
+Föredrar ni att spela i soffan? Här är de [bästa co-op-spelen till PS5 för två spelare](/co-op-spel-ps5/).

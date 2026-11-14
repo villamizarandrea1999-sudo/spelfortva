@@ -1,6 +1,7 @@
 ---
 title: Skriv för oss
 description: Vill du publicera en artikel på Spel för två? Läs våra riktlinjer för gästinlägg och samarbeten.
+date: 2026-11-14
 ---
 Vi tar emot gästinlägg och samarbeten som passar våra läsare: spel, teknik, nöje, relationer och fritid.
 
