@@ -1,13 +1,13 @@
 ---
-title: Spel för två – 20 bästa spelen för två spelare
-description: Spel för två: 20 bästa brädspel, kortspel, konsolspel och appar för två spelare – med speltid, ålder och vem varje spel passar för.
+title: Spel för två – 20 bästa spelen för två spelare (2027)
+description: 20 bästa spelen för två: brädspel, kortspel, konsol och mobil. Speltid, ålder och vem varje spel passar – för par, vänner och syskon.
 date: 2026-11-14
 category: guider
 image: 1585504198199-20277593b94f
 ---
 Letar ni efter **spel för två**? Det korta svaret: vill ni ha ett strategispel till köksbordet, välj **7 Wonders Duel**. Vill ni ha något lugnt och snabbt som alla kan lära sig, välj **Patchwork**. Och vill ni spela tillsammans på konsol finns det inget bättre än **It Takes Two** och **Split Fiction** – två äventyr som bara går att spela med två.
 
-Nedan hittar ni alla 20 spel, uppdelade efter var ni vill spela: vid bordet, i soffan eller i mobilen. För varje spel anger vi antal spelare, speltid och ålder, vem spelet passar för och vårt omdöme, så att ni slipper chansa i butiken. Längst ner finns råd om hur ni väljer och svar på de vanligaste frågorna.
+Nedan hittar ni alla 20 spel, uppdelade efter var ni vill spela: vid bordet, i soffan eller i mobilen. För varje spel anger vi antal spelare, speltid och ålder, vem spelet passar för och vårt omdöme, så att ni slipper chansa i butiken. Längst ner finns råd om hur ni väljer och svar på de vanligaste frågorna. Letar ni efter en present? Se våra [julklappstips med spel för två](/julklapp-spel-for-tva/).
 
 ## Snabbguide: våra favoriter
 
@@ -313,6 +313,17 @@ omdome: Ett roligt sätt att hålla kontakten – och att bevisa vem som är sma
 lank: TODO
 :::
 
+## Spela gratis online – spel för två utan att köpa något
+
+Vill ni spela spel för två gratis, direkt i webbläsaren eller mobilen? Det finns gott om gratisspel på nätet, men många sidor är fulla av reklam och enkla minispel. Här är de gratisalternativ vi själva tycker är värda att prova – särskilt om ni bor på olika ställen.
+
+- **[Board Game Arena](https://boardgamearena.com/)** – spela hundratals riktiga brädspel gratis i webbläsaren, mot varandra eller mot andra. Vissa spel kräver ett betalt premiumkonto, men många är gratis.
+- **[Lichess](https://lichess.org/)** – schack helt gratis och utan reklam. Skicka en länk till den andra och börja spela direkt.
+- **[Codenames online](https://codenames.game/)** – den officiella gratisversionen av Codenames, att spela i webbläsaren.
+- **Wordfeud och Quizkampen** – gratis att ladda ner till mobilen, och perfekta när ni vill spela i er egen takt.
+
+Gratisspelen är ett bra sätt att testa vad ni gillar. Hittar ni en favorit kan det vara värt att köpa den fysiska versionen till köksbordet.
+
 ## Så väljer ni rätt spel för två
 
 Det finns inget spel som är bäst för alla. Här är frågorna vi tycker att ni ska ställa er innan ni köper.
@@ -343,13 +354,13 @@ Små kortspel som Jaipur, Lost Cities och The Fox in the Forest kostar oftast mi
 
 Det beror på vad ni gillar. Vårt bästa strategispel för två vid bordet är 7 Wonders Duel, det bästa enkla spelet är Patchwork och det bästa konsolspelet är It Takes Two.
 
-### Vilka spel för två passar par?
+### Vilka spel för två passar par, vänner och syskon?
 
-Samarbetsspel fungerar ofta bäst för par: Codenames Duet, Sky Team och It Takes Two. Vill ni tävla lite vänskapligt är Patchwork och Jaipur bra val.
+Samarbetsspel fungerar ofta bäst för par: Codenames Duet, Sky Team och It Takes Two. Vill ni tävla lite vänskapligt är Patchwork och Jaipur bra val. För syskon i olika åldrar passar spel som är lätta att lära sig, som Kingdomino, Carcassonne och Mario Kart 8 Deluxe.
 
 ### Finns det bra spel för två som är gratis?
 
-Ja. Wordfeud och Quizkampen är gratis att ladda ner. Och med en vanlig kortlek kan ni spela klassiska kortspel för två, som kasino.
+Ja. Wordfeud och Quizkampen är gratis att ladda ner, och på Board Game Arena kan ni spela många brädspel gratis i webbläsaren. Och med en vanlig kortlek kan ni spela klassiska kortspel för två, som kasino.
 
 ### Vilka brädspel för två är lättast att lära sig?
 
@@ -359,4 +370,4 @@ Patchwork, Kingdomino och Lost Cities går alla att lära sig på några minuter
 
 Ja. Båda går att spela på samma skärm eller online, och tack vare Friend's Pass räcker det att en av er äger spelet.
 
-Hittade ni något ni gillar? Läs gärna vidare i våra guider till [sällskapsspel för två](/sallskapsspel-for-tva/) och [co-op-spel till PS5](/co-op-spel-ps5/).
+Hittade ni något ni gillar? Läs gärna vidare i våra guider till [brädspel för två vuxna](/sallskapsspel-for-tva/) och [co-op-spel till PS5](/co-op-spel-ps5/).
