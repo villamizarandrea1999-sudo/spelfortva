@@ -3,6 +3,7 @@ title: Spel för två – 15 bästa spelen att spela tillsammans
 description: Våra favoriter bland spel för två – co-op på konsol och PC, sällskapsspel för par och appar ni kan spela var ni än är.
 date: 2026-11-14
 category: guider
+image: 1585504198199-20277593b94f
 ---
 Letar du efter **spel för två**? Här är våra favoriter, uppdelade efter hur ni vill spela: soffan, köksbordet eller mobilen.
 

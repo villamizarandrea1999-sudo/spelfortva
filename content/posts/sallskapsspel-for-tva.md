@@ -3,6 +3,7 @@ title: Sällskapsspel för två – 8 brädspel för par och vänner
 description: De bästa sällskapsspelen för två spelare, från snabba kortspel till strategispel för långa kvällar.
 date: 2026-11-13
 category: sallskapsspel
+image: 1677188010559-0667a1ed33a0
 ---
 Många brädspel kräver fyra spelare, men det finns gott om **sällskapsspel för två** som är minst lika roliga.
 

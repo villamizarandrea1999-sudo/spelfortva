@@ -111,16 +111,39 @@ def page(title, description, path, content, extra_head=""):
       <a href="/rss.xml">RSS</a>
     </div>
   </div>
-  <p class="wrap copy">© {year} {SITE['name']}</p>
+  <p class="wrap copy">© {year} {SITE['name']} · Foton: <a href="https://unsplash.com/" rel="noopener">Unsplash</a></p>
 </footer>
 </body>
 </html>"""
 
 
-def thumb(p):
+# Standardfoton per kategori (Unsplash, fri licens) när en artikel saknar egen `image:`
+UNSPLASH = "https://images.unsplash.com/photo-"
+CAT_IMAGES = {
+    "nyheter": "1769288361820-898812b71482",
+    "co-op": "1509198397868-475647b2a1e5",
+    "sallskapsspel": "1763875067516-e947790c74ac",
+    "mobil": "1564049489314-60d154ff107d",
+    "erbjudanden": "1547638375-ebf04735d792",
+    "guider": "1585504198199-20277593b94f",
+}
+
+
+def image_url(p, w=800):
+    img = p.get("image") or CAT_IMAGES.get(p["category"], "")
+    if not img:
+        return ""
+    if img.startswith("http") or img.startswith("/"):
+        return img
+    return f"{UNSPLASH}{img}?auto=format&fit=crop&w={w}&q=75"
+
+
+def thumb(p, w=800, eager=False):
     cat = CATEGORIES.get(p["category"], p["category"])
-    if p.get("image"):
-        return f'<div class="thumb"><img src="{esc(p["image"])}" alt="" loading="lazy"></div>'
+    url = image_url(p, w)
+    if url:
+        lazy = "" if eager else ' loading="lazy"'
+        return f'<div class="thumb"><img src="{esc(url)}" alt="{esc(p["title"])}"{lazy}></div>'
     return f'<div class="thumb ph ph-{p["category"]}" aria-hidden="true"><span>{cat}</span></div>'
 
 
@@ -134,8 +157,9 @@ def card(p, kind="grid"):
     if kind == "mini":
         return f"""<article class="card mini"><a href="/{p['slug']}/" class="card-link">
   <div class="mini-text"><h3>{esc(p['title'])}</h3>{date}</div>{thumb(p)}</a></article>"""
+    w = 1400 if kind == "feature" else 800
     return f"""<article class="card card-{kind}"><a href="/{p['slug']}/" class="card-link">
-  {thumb(p)}
+  {thumb(p, w, eager=kind == "feature")}
   <div class="card-body">{kicker}<{h}>{esc(p['title'])}</{h}>{excerpt}<p class="meta">{date} · {p['reading']} min</p></div>
 </a></article>"""
 
@@ -185,13 +209,14 @@ def build():
     <p class="lead">{esc(p.get('description', ''))}</p>
     <p class="meta">Av redaktionen · <time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time> · {p['reading']} min läsning</p>
   </header>
-  <div class="post-hero">{thumb(p)}</div>
+  <div class="post-hero">{thumb(p, 1600, eager=True)}</div>
   {notice}
   <div class="prose">{p['html']}</div>
 </article>
 {'<section class="related">' + section_head('Läs också') + '<div class="grid">' + rel_html + '</div></section>' if related else ''}"""
         write(f"/{p['slug']}/", page(f"{p['title']} | {SITE['name']}", p.get("description", ""), f"/{p['slug']}/",
-                                     content, f'<script type="application/ld+json">{schema}</script>'))
+                                     content, f'<meta property="og:image" content="{esc(image_url(p, 1200))}">\n'
+                                     f'<script type="application/ld+json">{schema}</script>'))
 
     # Startsida
     feature = card(posts[0], "feature") if posts else ""
@@ -205,9 +230,11 @@ def build():
             f'<li><a href="/kategori/{k}/"><span class="dot k-{k}"></span>{v}<span class="count">{counts[k]}</span></a></li>'
             for k, v in CATEGORIES.items()) + "</ul>"
     sections = ""
+    if posts[3:]:
+        sections += f'<section class="cat-section">{section_head("Fler artiklar")}<div class="grid">{"".join(card(p) for p in posts[3:11])}</div></section>'
     for k, v in CATEGORIES.items():
         items = [p for p in posts if p["category"] == k][:4]
-        if items:
+        if len(items) >= 4:  # egna kategorisektioner först när det finns tillräckligt att fylla dem
             sections += f'<section class="cat-section">{section_head(v, f"/kategori/{k}/")}<div class="grid">{"".join(card(p) for p in items)}</div></section>'
     home = f"""<h1 class="sr-only">{SITE['name']} – nyheter, tips och guider om spel för två</h1>
 <section class="top-stories">
