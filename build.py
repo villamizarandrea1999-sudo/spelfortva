@@ -39,6 +39,7 @@ def parse(path):
     meta["date"] = datetime.strptime(meta.get("date", "2026-01-01"), "%Y-%m-%d")
     meta["category"] = meta.get("category", "nyheter")
     meta["sponsored"] = meta.get("sponsored", "false").lower() == "true"
+    meta["image"] = meta.get("image", "")  # valfri bild-URL, annars färgad platshållare
     md = markdown.Markdown(extensions=["extra", "toc"])
     body_html = md.convert(body)
     # Sponsrade inlägg: alla externa länkar får rel="sponsored noopener"
@@ -60,7 +61,9 @@ def esc(s):
 
 def page(title, description, path, content, extra_head=""):
     canonical = SITE["url"] + path
-    nav = "".join(f'<a href="/kategori/{k}/">{v}</a>' for k, v in CATEGORIES.items())
+    cur = ' aria-current="page"'
+    nav = f'<a href="/"{cur if path == "/" else ""}>Start</a>' + "".join(
+        f'<a href="/kategori/{k}/"{cur if path == f"/kategori/{k}/" else ""}>{v}</a>' for k, v in CATEGORIES.items())
     year = datetime.now().year
     return f"""<!doctype html>
 <html lang="{SITE['lang']}">
@@ -79,23 +82,28 @@ def page(title, description, path, content, extra_head=""):
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Oswald:wght@500;600;700&family=Inter:wght@400;500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/style.css">
 {extra_head}
 </head>
 <body>
-<header class="top">
-  <div class="wrap top-inner">
-    <a class="logo" href="/"><span class="dice">⚄⚂</span> Spel<span>för</span>två</a>
-    <nav class="nav">{nav}</nav>
+<header class="masthead">
+  <div class="wrap mast-top">
+    <span>Nyheter · Tips · Guider</span>
+    <a class="btn-sub" href="/rss.xml">Prenumerera</a>
   </div>
+  <div class="wrap mast-brand">
+    <a class="logo" href="/">Spel för två</a>
+    <p class="mast-tag">{SITE['tagline']}</p>
+  </div>
+  <nav class="nav" aria-label="Kategorier"><div class="wrap nav-inner">{nav}</div></nav>
 </header>
 <main class="wrap">
 {content}
 </main>
 <footer class="foot">
   <div class="wrap foot-inner">
-    <div><a class="logo small" href="/"><span class="dice">⚄⚂</span> Spel<span>för</span>två</a>
+    <div><a class="logo small" href="/">Spel för två</a>
     <p>{SITE['tagline']}</p></div>
     <div class="foot-links">
       <a href="/om-oss/">Om oss</a><a href="/skriv-for-oss/">Skriv för oss</a>
@@ -109,16 +117,32 @@ def page(title, description, path, content, extra_head=""):
 </html>"""
 
 
-def card(p, big=False):
+def thumb(p):
     cat = CATEGORIES.get(p["category"], p["category"])
-    return f"""<article class="card{' big' if big else ''}">
-  <a href="/{p['slug']}/" class="card-link">
-    <span class="tag tag-{p['category']}">{cat}</span>
-    <h{2 if big else 3}>{esc(p['title'])}</h{2 if big else 3}>
-    <p>{esc(p.get('description', ''))}</p>
-    <time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time>
-  </a>
-</article>"""
+    if p.get("image"):
+        return f'<div class="thumb"><img src="{esc(p["image"])}" alt="" loading="lazy"></div>'
+    return f'<div class="thumb ph ph-{p["category"]}" aria-hidden="true"><span>{cat}</span></div>'
+
+
+def card(p, kind="grid"):
+    """kind: grid (bild + utdrag), side (bild utan utdrag), mini (lista med liten bild), feature (stor)."""
+    cat = CATEGORIES.get(p["category"], p["category"])
+    date = f'<time datetime="{p["date"]:%Y-%m-%d}">{sv_date(p["date"])}</time>'
+    kicker = f'<span class="kicker k-{p["category"]}">{cat}</span>'
+    h = "h2" if kind == "feature" else "h3"
+    excerpt = f'<p>{esc(p.get("description", ""))}</p>' if kind in ("grid", "feature") else ""
+    if kind == "mini":
+        return f"""<article class="card mini"><a href="/{p['slug']}/" class="card-link">
+  <div class="mini-text"><h3>{esc(p['title'])}</h3>{date}</div>{thumb(p)}</a></article>"""
+    return f"""<article class="card card-{kind}"><a href="/{p['slug']}/" class="card-link">
+  {thumb(p)}
+  <div class="card-body">{kicker}<{h}>{esc(p['title'])}</{h}>{excerpt}<p class="meta">{date} · {p['reading']} min</p></div>
+</a></article>"""
+
+
+def section_head(title, href=None):
+    more = f'<a class="more" href="{href}">Visa alla ›</a>' if href else ""
+    return f'<div class="section-head"><h2>{title}</h2>{more}</div>'
 
 
 def write(path, text):
@@ -154,31 +178,44 @@ def build():
             "mainEntityOfPage": f"{SITE['url']}/{p['slug']}/",
         }, ensure_ascii=False)
         content = f"""<article class="post">
-  <nav class="crumbs"><a href="/">Start</a> › <a href="/kategori/{p['category']}/">{cat}</a></nav>
-  <span class="tag tag-{p['category']}">{cat}</span>
-  <h1>{esc(p['title'])}</h1>
-  <p class="lead">{esc(p.get('description', ''))}</p>
-  <p class="meta"><time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time> · {p['reading']} min läsning</p>
+  <header class="post-head">
+    <nav class="crumbs"><a href="/">Start</a> › <a href="/kategori/{p['category']}/">{cat}</a></nav>
+    <span class="kicker k-{p['category']}">{cat}</span>
+    <h1>{esc(p['title'])}</h1>
+    <p class="lead">{esc(p.get('description', ''))}</p>
+    <p class="meta">Av redaktionen · <time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time> · {p['reading']} min läsning</p>
+  </header>
+  <div class="post-hero">{thumb(p)}</div>
   {notice}
   <div class="prose">{p['html']}</div>
 </article>
-{'<section class="related"><h2>Läs också</h2><div class="grid">' + rel_html + '</div></section>' if related else ''}"""
+{'<section class="related">' + section_head('Läs också') + '<div class="grid">' + rel_html + '</div></section>' if related else ''}"""
         write(f"/{p['slug']}/", page(f"{p['title']} | {SITE['name']}", p.get("description", ""), f"/{p['slug']}/",
                                      content, f'<script type="application/ld+json">{schema}</script>'))
 
     # Startsida
-    hero = card(posts[0], big=True) if posts else ""
-    latest = "".join(card(p) for p in posts[1:13])
-    cats = "".join(f'<a class="cat-pill tag-{k}" href="/kategori/{k}/">{v}</a>' for k, v in CATEGORIES.items())
-    home = f"""<section class="hero">
-  <div class="hero-text">
-    <h1>Spel för två – <em>bättre tillsammans</em></h1>
-    <p>{SITE['tagline']} Vi testar co-op-spel, sällskapsspel och appar som är gjorda för två spelare.</p>
-    <div class="pills">{cats}</div>
-  </div>
-  {hero}
+    feature = card(posts[0], "feature") if posts else ""
+    side = "".join(card(p, "side") for p in posts[1:3])
+    latest = posts[3:8]
+    if latest:
+        right = '<h2 class="rail-title">Senaste</h2>' + "".join(card(p, "mini") for p in latest)
+    else:  # få artiklar ännu: visa kategorierna i högerspalten
+        counts = {k: sum(p["category"] == k for p in posts) for k in CATEGORIES}
+        right = '<h2 class="rail-title">Kategorier</h2><ul class="cat-list">' + "".join(
+            f'<li><a href="/kategori/{k}/"><span class="dot k-{k}"></span>{v}<span class="count">{counts[k]}</span></a></li>'
+            for k, v in CATEGORIES.items()) + "</ul>"
+    sections = ""
+    for k, v in CATEGORIES.items():
+        items = [p for p in posts if p["category"] == k][:4]
+        if items:
+            sections += f'<section class="cat-section">{section_head(v, f"/kategori/{k}/")}<div class="grid">{"".join(card(p) for p in items)}</div></section>'
+    home = f"""<h1 class="sr-only">{SITE['name']} – nyheter, tips och guider om spel för två</h1>
+<section class="top-stories">
+  <div class="col-side">{side}</div>
+  <div class="col-feature">{feature}</div>
+  <aside class="col-rail">{right}</aside>
 </section>
-<section><h2 class="section-title">Senaste</h2><div class="grid">{latest}</div></section>"""
+{sections}"""
     write("/", page(f"{SITE['name']} – nyheter, tips och guider om spel för två", SITE["tagline"], "/", home))
 
     # Kategorier
@@ -186,7 +223,7 @@ def build():
         items = [p for p in posts if p["category"] == k]
         body = "".join(card(p) for p in items) or '<p class="empty">Inga artiklar ännu – snart här!</p>'
         write(f"/kategori/{k}/", page(f"{v} | {SITE['name']}", f"Allt om {v.lower()} för två spelare.",
-                                      f"/kategori/{k}/", f'<h1 class="page-title">{v}</h1><div class="grid">{body}</div>'))
+                                      f"/kategori/{k}/", f'<div class="section-head page-head"><h1>{v}</h1></div><div class="grid">{body}</div>'))
 
     # Statiska sidor
     for f in sorted((ROOT / "content/pages").glob("*.md")):
