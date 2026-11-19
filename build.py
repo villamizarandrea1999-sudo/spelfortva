@@ -480,10 +480,12 @@ def build():
 
     # Startsida: ett utvalt inlägg + rutnät med senaste
     featured = next((p for p in posts if p["slug"] == "spel-for-tva"), posts[0] if posts else None)
-    rest = [p for p in posts if p is not featured]
+    # Spelsidor visas bara i blocket "Spela direkt" på startsidan, inte i listorna
+    listed = [p for p in posts if not p.get("game")]
+    rest = [p for p in listed if p is not featured]
     sections = ""
     for k, v in CATEGORIES.items():
-        items = [p for p in posts if p["category"] == k][:3]
+        items = [p for p in listed if p["category"] == k][:3]
         if len(items) >= 3:  # kategorisektioner först när det finns tillräckligt att fylla dem
             sections += f'<section class="cat-section">{section_head(v, f"/kategori/{k}/")}<div class="grid grid-3">{"".join(card(p) for p in items)}</div></section>'
     intro = ""
