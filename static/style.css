@@ -222,7 +222,15 @@ img{max-width:100%;display:block}
   .card-feature .card-body{padding:22px}
 }
 @media (max-width:640px){
-  .nav-inner{justify-content:flex-start}
+  /* Mobilmeny: alla kategorier syns direkt (radbryts i stället för att gömmas utanför skärmen) */
+  .nav-inner{flex-wrap:wrap;justify-content:center;gap:0 2px;overflow:visible;padding:2px 0}
+  .nav a{font-size:.7rem;padding:0 6px;min-height:40px;display:inline-flex;align-items:center;letter-spacing:0}
+  .masthead.compact .nav a{padding:0 6px}
+  .mast-tag{font-size:.6rem;letter-spacing:.08em}
+  .mast-tag .orn{display:none}
+  .logo{font-size:min(2.3rem,9.4vw)}
+  .logo.small{font-size:1.6rem}
+  .masthead.compact .logo{font-size:min(1.6rem,7vw)}
   .grid,.grid-3{grid-template-columns:1fr}
   .section-head::before{display:none}
   .post{padding:22px 18px;border-radius:0;border-left:0;border-right:0;margin-left:-16px;margin-right:-16px}
