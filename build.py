@@ -348,6 +348,14 @@ def faq_schema(p):
     return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
 
 
+def breadcrumb_schema(trail):
+    """trail: [(namn, sökväg), ...] – samma steg som den synliga brödsmulan."""
+    items = [{"@type": "ListItem", "position": i, "name": name, "item": f"{SITE['url']}{path}"}
+             for i, (name, path) in enumerate(trail, 1)]
+    data = {"@context": "https://schema.org", "@type": "BreadcrumbList", "itemListElement": items}
+    return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
+
+
 def toc_html(p):
     if len(p["toc"]) < 4:  # innehållsförteckning bara för längre artiklar
         return ""
@@ -424,7 +432,9 @@ def build():
             WARNINGS.append(f"{p['slug']}: titeln är {len(p['title'])} tecken (Google visar ca 60)")
         write(f"/{p['slug']}/", page(page_title(p["title"]), p.get("description", ""), f"/{p['slug']}/",
                                      content, f'<meta property="og:image" content="{esc(image_url(p, 1200))}">\n'
-                                     f'<script type="application/ld+json">{schema}</script>\n{faq_schema(p)}'))
+                                     f'<script type="application/ld+json">{schema}</script>\n{faq_schema(p)}\n'
+                                     + breadcrumb_schema([("Start", "/"), (cat, f"/kategori/{p['category']}/"),
+                                                          (p["title"], f"/{p['slug']}/")])))
 
     # Startsida: ett utvalt inlägg + rutnät med senaste
     featured = next((p for p in posts if p["slug"] == "spel-for-tva"), posts[0] if posts else None)
@@ -472,8 +482,9 @@ def build():
             h1, desc = c.get("title", v), c.get("description", desc)
             intro_html = f'<div class="cat-intro prose">{c["html"]}</div>'
         write(f"/kategori/{k}/", page(page_title(h1), desc, f"/kategori/{k}/",
+                                      f'<nav class="crumbs" aria-label="Brödsmulor"><a href="/">Start</a> / <span>{esc(v)}</span></nav>'
                                       f'<div class="section-head page-head"><h1>{esc(h1)}</h1></div>{intro_html}<div class="grid grid-3">{body}</div>',
-                                      noindex))
+                                      noindex + breadcrumb_schema([("Start", "/"), (v, f"/kategori/{k}/")])))
     for old, target in OLD_CATEGORY_REDIRECTS.items():
         write(f"/kategori/{old}/", redirect_page(target))
 
