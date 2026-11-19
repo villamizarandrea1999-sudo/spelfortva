@@ -1,0 +1,89 @@
+/* Sänka skepp – spelfortva.com */
+.ss-section{margin:4px 0 34px}
+.ss-head h1{font-family:var(--head);font-weight:700;font-size:clamp(1.55rem,3.4vw,2.3rem);line-height:1.2;margin:0 0 6px;letter-spacing:-.01em}
+.ss-head .meta{font:500 .78rem var(--head);display:flex;flex-wrap:wrap;gap:4px 14px}
+.ss-app{--water:#e4eef5;--water-line:#b3c9d8;--ship:#4f5e6b;--hit:#b4532a;--sunk:#5b2412;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 18px 20px;margin-top:12px;min-height:420px}
+.ss-noscript{padding:20px;text-align:center}
+.ss-bar{display:flex;justify-content:flex-end;gap:8px;margin-bottom:8px}
+.ss-btn{font:600 .9rem var(--head);min-height:44px;padding:8px 16px;border-radius:8px;border:2px solid var(--ink);background:#fff;color:var(--ink);cursor:pointer;line-height:1.2}
+.ss-btn:hover{background:var(--soft)}
+.ss-btn:focus-visible,.ss-setup input:focus-visible,.ss-setup select:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.ss-btn:disabled{opacity:.45;cursor:not-allowed}
+.ss-primary{background:var(--buy);border-color:var(--buy);color:#fff}
+.ss-primary:hover{background:var(--buy-dark)}
+.ss-small{min-height:40px;padding:6px 12px;font-size:.8rem;border-width:1px}
+.ss-big{min-height:50px;padding:10px 24px;font-size:1rem}
+.ss-h{font:700 1.15rem var(--head);margin:0 0 6px}
+.ss-help{font-size:.88rem;color:var(--muted);margin:0 0 10px}
+.ss-status{font:600 .95rem/1.4 var(--head);background:var(--soft);border-left:4px solid var(--accent);padding:9px 12px;border-radius:0 8px 8px 0;margin:0 0 14px;min-height:2.9em}
+.ss-status:empty{display:none}
+
+/* Bräde */
+.ss-grid{display:grid;grid-template-columns:18px repeat(10,minmax(0,1fr));width:100%;max-width:440px;margin:0 auto;user-select:none;-webkit-user-select:none;-webkit-tap-highlight-color:transparent}
+.ss-lab{font:600 .7rem var(--head);color:var(--muted);display:flex;align-items:center;justify-content:center;min-height:18px}
+.ss-cell{aspect-ratio:1;min-width:0;border:0;margin:0;padding:0;border-radius:0;background:var(--water);box-shadow:inset 0 0 0 .5px var(--water-line);
+  display:flex;align-items:center;justify-content:center;font:700 1rem/1 var(--sans);color:#2c3a46}
+button.ss-cell{cursor:crosshair}
+button.ss-cell:hover{background:#cddfeb}
+.ss-cell:focus-visible{outline:3px solid var(--ink);outline-offset:-3px;position:relative;z-index:1}
+.ss-cell.ship,button.ss-cell.ship:hover{background:var(--ship);box-shadow:inset 0 0 0 1px #2e3943;color:#fff}
+.ss-cell.miss{color:#3a4855;font-size:.85rem}
+.ss-cell.hit,button.ss-cell.hit:hover{background:var(--hit);color:#fff}
+.ss-cell.sunk,button.ss-cell.sunk:hover{background:var(--sunk);color:#fff}
+.ss-cell.prev{background:#2f7a52;box-shadow:inset 0 0 0 1px #1d4f35}
+.ss-cell.prev::after{content:"✓";color:#fff;font-size:.8rem}
+.ss-cell.prev-bad{background:#c2414b}
+.ss-cell.prev-bad::after{content:"!";color:#fff}
+.ss-place .ss-cell,.ss-ship{touch-action:none}
+.ss-pop{animation:ssPop .35s ease}
+.ss-sinkanim{animation:ssSink .5s ease}
+@keyframes ssPop{0%{transform:scale(.5)}60%{transform:scale(1.18)}100%{transform:scale(1)}}
+@keyframes ssSink{0%,100%{transform:none}20%{transform:translateX(-3px)}40%{transform:translateX(3px)}60%{transform:translateX(-2px)}80%{transform:translateX(2px)}}
+@media (prefers-reduced-motion:reduce){.ss-pop,.ss-sinkanim{animation:none}}
+
+/* Layout */
+.ss-boards{display:grid;gap:22px}
+.ss-panel h3{font:600 .92rem var(--head);margin:0 0 6px;text-align:center}
+.ss-enemy h3{color:var(--accent-dark)}
+.ss-fleet{list-style:none;padding:0;margin:8px auto 0;display:flex;flex-wrap:wrap;gap:2px 12px;justify-content:center;font-size:.78rem;color:var(--muted);max-width:440px}
+.ss-fleet .gone{text-decoration:line-through}
+.ss-place-layout{display:grid;gap:14px}
+.ss-ships{display:flex;flex-wrap:wrap;gap:6px}
+.ss-ship[aria-pressed="true"]{background:var(--ink);color:#fff}
+.ss-ship.placed{border-style:dashed;color:var(--muted)}
+.ss-ship.placed[aria-pressed="true"]{color:#fff}
+.ss-controls{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 0}
+.ss-center{justify-content:center}
+.ss-handover{text-align:center;padding:30px 12px;min-height:380px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:var(--soft);border-radius:8px}
+.ss-hand-icon{font-size:2.6rem;margin:0;color:var(--accent)}
+.ss-handover .ss-h{font-size:1.4rem}
+.ss-end{text-align:center;margin-bottom:14px}
+.ss-end h2{font:700 1.45rem var(--head);color:var(--buy-dark);margin:4px 0 8px}
+.ss-stats{font-size:.92rem;margin:2px 0}
+
+/* Startskärm */
+.ss-setup fieldset{border:0;padding:0;margin:0 0 12px}
+.ss-setup legend{font:600 .85rem var(--head);margin-bottom:6px;padding:0}
+.ss-seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.ss-seg label{display:flex;align-items:center;gap:8px;min-height:50px;border:2px solid var(--line);border-radius:8px;padding:8px 12px;cursor:pointer;font:600 .9rem/1.25 var(--head);background:#fff}
+.ss-seg label:has(input:checked){border-color:var(--buy);background:#eef6f1}
+.ss-seg input{width:18px;height:18px;flex:none;accent-color:var(--buy)}
+.ss-fields{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));margin-bottom:10px}
+.ss-fields label{display:flex;flex-direction:column;gap:4px;font:600 .8rem var(--head)}
+.ss-fields input,.ss-fields select{min-height:44px;font:400 1rem var(--sans);padding:6px 10px;border:1px solid #8f8478;border-radius:6px;background:#fff;color:var(--ink)}
+.ss-opts{display:flex;flex-wrap:wrap;gap:2px 18px;margin-bottom:14px}
+.ss-opts label{display:flex;align-items:center;gap:8px;min-height:44px;font-size:.92rem;cursor:pointer}
+.ss-opts input{width:20px;height:20px;accent-color:var(--buy)}
+[hidden]{display:none!important}
+
+@media (min-width:760px){
+  .ss-boards{grid-template-columns:1fr 1fr}
+  .ss-place-layout{grid-template-columns:minmax(0,440px) minmax(0,1fr);align-items:start}
+}
+@media (max-width:640px){
+  .ss-app{margin-left:-16px;margin-right:-16px;padding:12px 4px 16px;border-radius:0;border-left:0;border-right:0}
+  .ss-bar,.ss-h,.ss-help,.ss-status,.ss-setup,.ss-end,.ss-controls,.ss-ships,.ss-handover{margin-left:8px;margin-right:8px}
+  .ss-grid{grid-template-columns:16px repeat(10,minmax(0,1fr))}
+  .ss-seg{grid-template-columns:1fr}
+}

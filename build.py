@@ -202,7 +202,10 @@ def page(title, description, path, content, extra_head=""):
 <link rel="apple-touch-icon" href="/apple-touch-icon.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<!-- Typsnitten laddas utan att blockera renderingen -->
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"></noscript>
 <link rel="stylesheet" href="/style.css">
 {ga_tag()}
 {extra_head}
@@ -248,13 +251,17 @@ def image_url(p, w=800):
     img = p.get("image") or CAT_IMAGES.get(p["category"], "")
     if not img:
         return ""
-    if img.startswith(("http", "/")):
+    if img.startswith("http"):
         return img
+    if img.startswith("/"):
+        return SITE["url"] + img  # lokal bild (t.ex. /img/...) – absolut för og:image och schema
     return f"{UNSPLASH}{img}?auto=format&fit=crop&w={w}&q=75"
 
 
 def thumb(p, w=800, eager=False):
     url = image_url(p, w)
+    if url.startswith(SITE["url"] + "/"):
+        url = url[len(SITE["url"]):]  # egna bilder: relativ sökväg på sidan (absolut bara i og:image/schema)
     if not url:
         return f'<div class="thumb ph" aria-hidden="true"><span>{esc(CATEGORIES.get(p["category"], ""))}</span></div>'
     lazy = "" if eager else ' loading="lazy"'
@@ -278,7 +285,14 @@ def card(p, kind="grid"):
 </a></article>"""
 
 
+POPULAR = ["spel-for-tva", "sanka-skepp", "kortspel-for-tva"]  # handplockade guider i sidopanelen
+
+
 def sidebar(posts, current=None):
+    by_slug = {q["slug"]: q for q in posts}
+    popular = [by_slug[s] for s in POPULAR if s in by_slug and by_slug[s] is not current]
+    pop_list = "".join(f'<li><a href="/{q["slug"]}/">{esc(q.get("crumb") or q["title"])}</a></li>' for q in popular)
+    popular_html = f'<div class="widget"><h2 class="widget-title">Populära guider</h2><ul class="cat-list">{pop_list}</ul></div>' if popular else ""
     latest = [q for q in posts if q is not current][:5]
     items = "".join(f"""<li><a href="/{q['slug']}/"><span class="num">{i}.</span>
   <span class="pop-text"><strong>{esc(q['title'])}</strong><time datetime="{q['date']:%Y-%m-%d}">{sv_date(q['date'])}</time></span>
@@ -287,7 +301,7 @@ def sidebar(posts, current=None):
     cats = "".join(f'<li><a href="/kategori/{k}/"><span class="dot t-{k}"></span>{v}<span class="count">{counts[k]}</span></a></li>'
                    for k, v in CATEGORIES.items() if k in ACTIVE_CATS)
     pop = f'<div class="widget"><h2 class="widget-title">Senaste artiklar</h2><ol class="pop">{items}</ol></div>' if latest else ""
-    return f"""<aside class="sidebar">{pop}
+    return f"""<aside class="sidebar">{popular_html}{pop}
   <div class="widget"><h2 class="widget-title">Kategorier</h2><ul class="cat-list">{cats}</ul></div>
   <div class="widget widget-about"><h2 class="widget-title">Om sajten</h2>
     <p>Vi jämför spel för två och berättar vem varje spel passar för – så att ni slipper chansa i butiken.</p>
@@ -409,14 +423,44 @@ def build():
             "publisher": {"@type": "Organization", "name": SITE["name"]},
             "mainEntityOfPage": f"{SITE['url']}/{p['slug']}/",
         }, ensure_ascii=False)
-        content = f"""<nav class="crumbs" aria-label="Brödsmulor"><a href="/">Start</a> / <a href="/kategori/{p['category']}/">{cat}</a> / <span>{esc(p['title'])}</span></nav>
+        crumb = p.get("crumb") or p["title"]
+        h1 = p.get("h1") or p["title"]
+        meta_line = (f'<p class="meta"><span>Av {esc(author_name())}</span><time datetime="{p["date"]:%Y-%m-%d}">{sv_date(p["date"])}</time>'
+                     + (f'<span>Uppdaterad <time datetime="{p["updated"]:%Y-%m-%d}">{sv_date(p["updated"])}</time></span>' if p["updated"] > p["date"] else "")
+                     + f'<span>{p["reading"]} min läsning</span></p>')
+        extra = ""
+        if p.get("game"):
+            # Artikel med inbäddat spel: spelet först (fullbredd), artikeln under
+            g = p["game"]
+            game_css = (ROOT / "static" / "games" / f"{g}.css").read_text(encoding="utf-8")
+            extra = f'<style>{game_css}</style>\n<script src="/games/{g}.js" defer></script>\n'
+            hero = p.get("hero") or image_url(p, 1200)
+            content = f"""<nav class="crumbs" aria-label="Brödsmulor"><a href="/">Start</a> / <a href="/kategori/{p['category']}/">{cat}</a> / <span>{esc(crumb)}</span></nav>
+<section class="ss-section">
+  <header class="ss-head"><a class="tag t-{p['category']}" href="/kategori/{p['category']}/">{cat}</a><h1>{esc(h1)}</h1>{meta_line}</header>
+  <div id="{g}" class="ss-app"><noscript><p class="ss-noscript">Aktivera JavaScript i webbläsaren för att spela.</p></noscript></div>
+</section>
+<div class="post-layout">
+<article class="post">
+  <figure class="game-hero"><img src="{esc(hero)}" width="1200" height="630" alt="{esc(p.get('hero_alt') or h1)}"></figure>
+  {notice}
+  {toc_html(p)}
+  <div class="prose">{p['html']}</div>
+  <footer class="post-foot"><span>Kategori:</span> <a href="/kategori/{p['category']}/">{cat}</a></footer>
+  {author_box()}
+</article>
+{sidebar(posts, p)}
+</div>
+{'<section class="related">' + section_head('Läs också') + '<div class="grid grid-3">' + "".join(card(q) for q in related) + '</div></section>' if related else ''}"""
+        else:
+            content = f"""<nav class="crumbs" aria-label="Brödsmulor"><a href="/">Start</a> / <a href="/kategori/{p['category']}/">{cat}</a> / <span>{esc(crumb)}</span></nav>
 <div class="post-layout">
 <article class="post">
   <header class="post-head">
     <a class="tag t-{p['category']}" href="/kategori/{p['category']}/">{cat}</a>
-    <h1>{esc(p['title'])}</h1>
+    <h1>{esc(h1)}</h1>
     <p class="lead">{esc(p.get('description', ''))}</p>
-    <p class="meta"><span>Av {esc(author_name())}</span><time datetime="{p['date']:%Y-%m-%d}">{sv_date(p['date'])}</time>{f'<span>Uppdaterad <time datetime="{p["updated"]:%Y-%m-%d}">{sv_date(p["updated"])}</time></span>' if p['updated'] > p['date'] else ''}<span>{p['reading']} min läsning</span></p>
+    {meta_line}
   </header>
   <div class="post-hero">{thumb(p, 1400, eager=True)}</div>
   {notice}
@@ -431,10 +475,10 @@ def build():
         if len(p["title"]) > 60:
             WARNINGS.append(f"{p['slug']}: titeln är {len(p['title'])} tecken (Google visar ca 60)")
         write(f"/{p['slug']}/", page(page_title(p["title"]), p.get("description", ""), f"/{p['slug']}/",
-                                     content, f'<meta property="og:image" content="{esc(image_url(p, 1200))}">\n'
+                                     content, extra + f'<meta property="og:image" content="{esc(image_url(p, 1200))}">\n'
                                      f'<script type="application/ld+json">{schema}</script>\n{faq_schema(p)}\n'
                                      + breadcrumb_schema([("Start", "/"), (cat, f"/kategori/{p['category']}/"),
-                                                          (p["title"], f"/{p['slug']}/")])))
+                                                          (crumb, f"/{p['slug']}/")])))
 
     # Startsida: ett utvalt inlägg + rutnät med senaste
     featured = next((p for p in posts if p["slug"] == "spel-for-tva"), posts[0] if posts else None)
@@ -449,8 +493,16 @@ def build():
     if home_md.exists():
         h = parse(home_md)
         intro = f'<section class="home-intro"><h2>{esc(h["title"])}</h2><div class="prose">{h["html"]}</div></section>'
+    game_post = next((p for p in posts if p.get("game")), None)
+    play = ""
+    if game_post:
+        play = f"""<section class="play-block"><a href="/{game_post['slug']}/" tabindex="-1" aria-hidden="true"><img src="{esc(game_post.get('hero') or image_url(game_post))}" width="1200" height="630" alt="" loading="lazy"></a>
+  <div><p class="play-kicker">Spela direkt – gratis</p><h2>{esc(game_post.get('h1') or game_post['title'])}</h2>
+  <p>Utmana en vän på samma mobil eller spela mot datorn. Ingen nedladdning, ingen inloggning.</p>
+  <a class="btn-play" href="/{game_post['slug']}/">Spela Sänka skepp</a></div></section>"""
     home = f"""<h1 class="sr-only">{SITE['name']} – guider och tips om spel för två spelare</h1>
 <section class="featured">{card(featured, "feature") if featured else ""}</section>
+{play}
 {'<section>' + section_head("Senaste artiklar") + '<div class="grid grid-3">' + "".join(card(p) for p in rest[:12]) + '</div></section>' if rest else ''}
 {sections}
 {intro}"""

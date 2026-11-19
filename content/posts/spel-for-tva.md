@@ -318,6 +318,7 @@ lank: TODO
 Vill ni spela spel för två gratis, direkt i webbläsaren eller mobilen? Det finns gott om gratisspel på nätet, men många sidor är fulla av reklam och enkla minispel. Här är de gratisalternativ vi själva tycker är värda att prova – särskilt om ni bor på olika ställen.
 
 - **[Board Game Arena](https://boardgamearena.com/)** – spela hundratals riktiga brädspel gratis i webbläsaren, mot varandra eller mot andra. Vissa spel kräver ett betalt premiumkonto, men många är gratis.
+- **[Sänka skepp](/sanka-skepp/)** – vår egen gratisversion av klassikern. Spela mot varandra på samma mobil eller mot datorn, utan nedladdning.
 - **[Lichess](https://lichess.org/)** – schack helt gratis och utan reklam. Skicka en länk till den andra och börja spela direkt.
 - **[Codenames online](https://codenames.game/)** – den officiella gratisversionen av Codenames, att spela i webbläsaren.
 - **Wordfeud och Quizkampen** – gratis att ladda ner till mobilen, och perfekta när ni vill spela i er egen takt.

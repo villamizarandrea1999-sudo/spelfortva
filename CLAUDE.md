@@ -27,6 +27,12 @@ from Swedish game shops.
 - Game boxes in articles: a `:::spel` … `:::` block with namn, spelare, speltid, alder,
   passar, omdome, lank (affiliate link; `TODO` keeps the "Se pris" button inactive).
 - Articles with 4+ H2 headings get an automatic table of contents.
+- Optional front matter: `h1` (H1 differs from the title tag), `crumb` (short breadcrumb name),
+  `game: <slug>` (embeds `static/games/<slug>.js` at the top; its CSS is inlined), `hero` + `hero_alt`.
+- Sänka skepp (/sanka-skepp/): vanilla JS game. Engine + AI are DOM-free (testable in Node via
+  `module.exports`). GA events (game_start, game_end, share_click) fire only if `window.gtag` exists
+  AND `window.spftAnalyticsConsent === true` – set that from a future cookie banner.
+- Sidebar "Populära guider" = `POPULAR` list in build.py.
 - Empty categories are hidden from the menu, sidebar and sitemap (page exists, noindex).
 - GA4: set `SITE["ga_id"]` in build.py; while it is `G-XXXXXXX` no tag is loaded.
 - `python build.py` → `dist/`. Pushing to main triggers GitHub Actions (build + deploy).
