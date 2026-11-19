@@ -204,7 +204,8 @@
     mode: saved.mode === 'pvp' ? 'pvp' : 'ai',
     level: LEVELS[saved.level] ? saved.level : 'normal',
     names: [cleanName(saved.names && saved.names[0], 'Spelare 1'), cleanName(saved.names && saved.names[1], 'Spelare 2')],
-    noTouch: !!saved.noTouch, again: !!saved.again, sound: false,
+    noTouch: saved.noTouch === undefined ? true : !!saved.noTouch, // nya besökare: skepp får inte nudda
+    again: !!saved.again, sound: false,
     boards: null, stats: null, turn: 0, over: false, ai: null, gid: 0
   };
   var P = null; // placeringsläge
@@ -375,7 +376,7 @@
       newGame();
     });
     sync();
-    show([h('h2', { class: 'ss-h', text: 'Nytt spel' }), form]);
+    show([h('div', { class: 'ss-h', role: 'heading', 'aria-level': '3', text: 'Nytt spel' }), form]);
   }
 
   function newGame() {
@@ -440,7 +441,7 @@
     var who = S.mode === 'ai' ? 'Placera din flotta' : 'Placera din flotta, ' + S.names[p];
     show([
       toolbar(),
-      h('h2', { class: 'ss-h', text: who }),
+      h('div', { class: 'ss-h', role: 'heading', 'aria-level': '3', text: who }),
       h('p', { class: 'ss-help', text: 'Välj ett skepp och tryck på brädet, eller dra skeppet dit. Tryck på ett placerat skepp för att flytta det. R roterar.' }),
       status(''),
       h('div', { class: 'ss-place-layout' }, [
@@ -577,7 +578,7 @@
     var ready = btn('Jag är redo', next, 'ss-primary ss-big');
     show([h('div', { class: 'ss-handover' }, [
       h('p', { class: 'ss-hand-icon', 'aria-hidden': 'true', text: '⇄' }),
-      h('h2', { class: 'ss-h', text: 'Ge enheten till ' + S.names[p] }),
+      h('div', { class: 'ss-h', role: 'heading', 'aria-level': '3', text: 'Ge enheten till ' + S.names[p] }),
       h('p', { text: note || 'Titta inte på skärmen förrän det är din tur.' }),
       ready
     ])], ready);
@@ -699,7 +700,7 @@
     B = null;
     show([
       toolbar(),
-      h('div', { class: 'ss-end' }, [h('h2', { text: title })].concat(stats, [h('div', { class: 'ss-controls ss-center' }, [again, share, btn('Ändra inställningar', setupScreen)])])),
+      h('div', { class: 'ss-end' }, [h('div', { class: 'ss-h ss-end-title', role: 'heading', 'aria-level': '3', text: title })].concat(stats, [h('div', { class: 'ss-controls ss-center' }, [again, share, btn('Ändra inställningar', setupScreen)])])),
       status(''),
       h('div', { class: 'ss-boards' }, [p1.el, p0.el])
     ], again);

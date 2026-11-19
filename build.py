@@ -168,7 +168,7 @@ def ga_tag():
 <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','{gid}');</script>"""
 
 
-def page(title, description, path, content, extra_head=""):
+def page(title, description, path, content, extra_head="", compact=False):
     canonical = SITE["url"] + path
     cur = ' aria-current="page"'
     nav = f'<a href="/"{cur if path == "/" else ""}>Start</a>' + "".join(
@@ -211,13 +211,11 @@ def page(title, description, path, content, extra_head=""):
 {extra_head}
 </head>
 <body>
-<header class="masthead">
-  <div class="wrap mast-top">
-    <a class="btn-sub" href="/kontakt/">Prenumerera</a>
-  </div>
+<header class="masthead{' compact' if compact else ''}">
+  {'' if compact else '<div class="wrap mast-top"><a class="btn-sub" href="/kontakt/">Prenumerera</a></div>'}
   <div class="wrap mast-brand">
     {logo()}
-    <p class="mast-tag"><span class="orn">~</span> Brädspel / Kortspel / Co-op / Mobil <span class="orn">~</span></p>
+    {'' if compact else '<p class="mast-tag"><span class="orn">~</span> Brädspel / Kortspel / Co-op / Mobil <span class="orn">~</span></p>'}
   </div>
   <nav class="nav" aria-label="Kategorier"><div class="wrap nav-inner">{nav}</div></nav>
 </header>
@@ -478,7 +476,7 @@ def build():
                                      content, extra + f'<meta property="og:image" content="{esc(image_url(p, 1200))}">\n'
                                      f'<script type="application/ld+json">{schema}</script>\n{faq_schema(p)}\n'
                                      + breadcrumb_schema([("Start", "/"), (cat, f"/kategori/{p['category']}/"),
-                                                          (crumb, f"/{p['slug']}/")])))
+                                                          (crumb, f"/{p['slug']}/")]), compact=bool(p.get("game"))))
 
     # Startsida: ett utvalt inlägg + rutnät med senaste
     featured = next((p for p in posts if p["slug"] == "spel-for-tva"), posts[0] if posts else None)

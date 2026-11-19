@@ -206,6 +206,12 @@ img{max-width:100%;display:block}
 .prose figcaption{font-size:.85rem;color:var(--muted);margin-top:6px}
 
 
+/* Kompakt sidhuvud (spelsidor) */
+.masthead.compact .mast-brand{padding-top:10px;padding-bottom:8px}
+.masthead.compact .logo{font-size:clamp(1.5rem,4vw,2rem)}
+.masthead.compact .nav a{padding:10px 12px}
+.masthead.compact + main .crumbs{margin:12px 0 10px}
+
 /* ---------- Responsivt ---------- */
 @media (max-width:980px){
   .grid,.grid-3{grid-template-columns:repeat(2,1fr)}
