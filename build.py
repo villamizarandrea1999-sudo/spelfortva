@@ -1,5 +1,6 @@
 #!/usr/bin/env python3
 """Bygger spelfortva.com: content/posts/*.md -> dist/ (startsida, kategorier, artiklar, RSS, sitemap)."""
+import hashlib
 import html, json, re, shutil
 from datetime import datetime, timezone
 from pathlib import Path
@@ -168,6 +169,10 @@ def ga_tag():
 <script>window.dataLayer=window.dataLayer||[];function gtag(){{dataLayer.push(arguments);}}gtag('js',new Date());gtag('config','{gid}');</script>"""
 
 
+# Versionsnummer för style.css: ändras när filen ändras, så att webbläsare hämtar den nya versionen direkt
+CSS_VER = hashlib.md5((ROOT / "static" / "style.css").read_bytes()).hexdigest()[:8]
+
+
 def page(title, description, path, content, extra_head="", compact=False):
     canonical = SITE["url"] + path
     cur = ' aria-current="page"'
@@ -206,7 +211,7 @@ def page(title, description, path, content, extra_head="", compact=False):
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" media="print" onload="this.media='all'">
 <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700&family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap"></noscript>
-<link rel="stylesheet" href="/style.css">
+<link rel="stylesheet" href="/style.css?v={CSS_VER}">
 {ga_tag()}
 {extra_head}
 </head>
@@ -217,8 +222,8 @@ def page(title, description, path, content, extra_head="", compact=False):
     {logo()}
     {'' if compact else '<p class="mast-tag"><span class="orn">~</span> Brädspel / Kortspel / Co-op / Mobil <span class="orn">~</span></p>'}
   </div>
-  <nav class="nav" aria-label="Kategorier"><div class="wrap nav-inner">{nav}</div></nav>
 </header>
+<nav class="nav{' compact' if compact else ''}" aria-label="Kategorier"><div class="wrap nav-inner">{nav}</div></nav>
 <main class="wrap">
 {content}
 </main>
