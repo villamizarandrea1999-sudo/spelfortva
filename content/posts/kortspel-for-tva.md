@@ -1,13 +1,13 @@
 ---
-title: Kortspel för två – 13 bästa kortspelen för 2 spelare
-description: Kortspel för två: 7 klassiker med vanlig kortlek och 6 moderna kortspel. Så spelar ni Gin rummy, Chicago och Stress – för par, vänner och barn.
+title: Kortspel för två – 15 bästa kortspelen för 2 spelare
+description: Kortspel för två: 9 klassiker med vanlig kortlek och 6 moderna kortspel. Så spelar ni Gin rummy, Chicago, Kasino och Stress – för par och barn.
 date: 2026-11-18
 category: bradspel
 image: 1503482618211-c70b46ede8b0
 ---
 Letar ni efter **kortspel för två**? Det bästa är att ni inte behöver köpa något alls: med en vanlig kortlek kan ni spela **Gin rummy**, **Chicago** och **Stress** redan i kväll. Vill ni ha något nytt finns det dessutom moderna kortspel som är gjorda just för två spelare – små lådor som får plats i fickan men räcker för hundratals partier.
 
-I den här guiden har vi delat upp spelen i två delar: **sju klassiska kortspel med vanlig kortlek**, med en kort förklaring av hur ni spelar, och **sex moderna kortspel för två** som ni kan köpa. För varje spel ser ni vem det passar för, så att ni snabbt hittar rätt – oavsett om ni är ett par, två vänner eller en förälder och ett barn. Letar ni efter brädspel och konsolspel också, se vår stora guide [Spel för två – 20 bästa spelen för två spelare](/spel-for-tva/).
+I den här guiden har vi delat upp spelen i två delar: **nio klassiska kortspel med vanlig kortlek**, med en kort förklaring av hur ni spelar, och **sex moderna kortspel för två** som ni kan köpa. För varje spel ser ni vem det passar för, så att ni snabbt hittar rätt – oavsett om ni är ett par, två vänner eller en förälder och ett barn. Letar ni efter brädspel och konsolspel också, se vår stora guide [Spel för två – 20 bästa spelen för två spelare](/spel-for-tva/).
 
 ## Snabbguide: vilket kortspel för två passar er?
 
@@ -15,6 +15,8 @@ I den här guiden har vi delat upp spelen i två delar: **sju klassiska kortspel
 |---|---|---|---|
 | Gin rummy | Klassiker | Vanlig kortlek | Vuxna som vill ha taktik |
 | Chicago | Klassiker | Vanlig kortlek | Den som gillar poängjakt |
+| Kasino | Klassiker | Vanlig kortlek | Två spelare som vill räkna och samla |
+| Tvåmanswhist | Klassiker | Vanlig kortlek | Er som gillar stick |
 | Stress | Klassiker | Vanlig kortlek | Snabba, högljudda partier |
 | Vändtia | Klassiker | Vanlig kortlek | Lätt att lära, alla åldrar |
 | Svälta räv | Klassiker | Vanlig kortlek | Barn och familj |
@@ -53,15 +55,47 @@ Chicago är en svensk favorit som kombinerar två delar: först försöker ni by
 **Så spelar ni:**
 
 - Varje spelare får 5 kort.
-- Ni får byta kort i upp till tre omgångar. Efter varje byte får den som har bäst kombination på handen poäng – till exempel 1 poäng för ett par, 2 för två par, 3 för triss, 4 för stege, 5 för färg, 6 för kåk och 7 för fyrtal.
-- Efter sista bytet spelas korten ut i stick, och man måste följa färg om man kan. Den som tar sista sticket får 5 poäng.
+- Ni får byta kort tre gånger – slänga valfritt antal och dra lika många nya. Efter **första och andra** bytet får den som har bäst kombination på handen poäng.
+- Poängen för kombinationerna: par 1, två par 2, triss 3, stege 4, färg 5, kåk 6, fyrtal 7 och färgstege 8. En royal straight flush (färgstege från 10 till ess) ger 52 poäng och vinner direkt.
+- Efter tredje bytet spelas de fem korten ut i stick utan trumf, och man måste följa färg om man kan. Den som tar sista sticket får 5 poäng.
+- När sticken är spelade visar ni korten, och bäst kombination får poäng en gång till.
+- **Chicago** är det rop som gett spelet sitt namn: innan stickspelet börjar kan en spelare som har minst 15 poäng ropa "Chicago" och lova att ta alla fem stick. Lyckas det ger det 15 poäng – misslyckas det förlorar spelaren 15 poäng.
 - Den som först når 52 poäng vinner.
 
-Poängtabellen skiljer sig lite mellan olika regelvarianter, så bestäm i förväg vilken ni använder.
+Det finns många husregler för Chicago, till exempel att den som har 46 poäng eller mer inte längre får byta kort. Bestäm i förväg vilka regler ni använder.
 
 **Passar för:** Er som gillar att räkna poäng och vill ha både tur och taktik i samma spel.
 
-### 3. Stress – det snabbaste kortspelet för två
+### 3. Kasino – den svenska klassikern för två
+
+Kasino är ett av Sveriges mest kända kortspel och fungerar allra bäst för två spelare. Det handlar om att ta kort från bordet med kort från handen – och om att hålla koll på vilka kort som är värda poäng. (Trots namnet har spelet ingenting med spel om pengar att göra.)
+
+**Så spelar ni:**
+
+- Varje spelare får 4 kort, och 4 kort läggs med bildsidan upp på bordet.
+- Korten har värden: kung 13, dam 12, knekt 11, ess 1 eller 14 (ni väljer) och övriga kort sitt siffervärde.
+- På er tur tar ni kort från bordet som har samma värde som ett kort på handen – eller flera kort som tillsammans blir det värdet. Kan eller vill ni inte ta något lägger ni ett kort på bordet.
+- Tar ni alla kort på bordet får ni en "tabbe", som ger 1 poäng.
+- När händerna är tomma delas 4 nya kort ut till var och en, så länge korthögen räcker.
+- När korten är slut räknar ni poäng: ruter tio ("stora kasino") 2 poäng, spader två ("lilla kasino") 1 poäng, varje ess 1 poäng, flest spader 2 poäng, flest kort 1 poäng och sista intaget 1 poäng – plus era tabbar.
+- Ni spelar flera givar, ofta tills någon når 16 poäng.
+
+**Passar för:** Två spelare som gillar att räkna och planera. Bra för barn som kan addera.
+
+### 4. Tvåmanswhist – stickspel för bara två
+
+De flesta stickspel kräver fyra spelare, men tvåmanswhist är gjort för två. Spelet har två delar: först spelar ni om vilka kort ni får, sedan spelar ni om poängen.
+
+**Så spelar ni:**
+
+- Varje spelare får 13 kort. Resten blir en hög, och översta kortet vänds upp – dess färg blir trumf.
+- **Del 1:** Ni spelar stick. Den som vinner sticket tar det uppvända kortet från högen, den andra tar nästa (dolda) kort. Sedan vänds ett nytt kort upp. Sticken i den här delen ger inga poäng – det handlar om att skaffa bra kort.
+- **Del 2:** När högen är slut har ni 13 kort var och spelar ut dem i vanliga stick.
+- Varje stick ni tar utöver de första sex i del 2 ger 1 poäng. Bestäm själva hur många poäng ni spelar till, till exempel 7.
+
+**Passar för:** Er som gillar stickspel som Chicago och whist men bara är två.
+
+### 5. Stress – det snabbaste kortspelet för två
 
 Stress är raka motsatsen till Gin rummy: här finns inga turer, ni spelar samtidigt och så snabbt ni kan. Ett parti går undan, och det blir ofta både skratt och högljudda protester.
 
@@ -75,9 +109,11 @@ Stress är raka motsatsen till Gin rummy: här finns inga turer, ni spelar samti
 - En vanlig extraregel: visar de två högarna i mitten samma valör ska ni slå handen på en hög och ropa "Stress!" – den som är långsammast får ta upp korten.
 - Den som först blir av med alla sina kort vinner.
 
+![Uppställning i Stress: fyra uppvända kort per spelare och två högar i mitten](/img/stress-uppstallning.svg)
+
 **Passar för:** Syskon, kompisar och alla som vill ha fart. Bra för barn som kan siffrorna.
 
-### 4. Vändtia – enkelt, roligt och lite elakt
+### 6. Vändtia – enkelt, roligt och lite elakt
 
 Vändtia är ett av de mest spelade kortspelen i Sverige, och det fungerar bra även när ni bara är två. Reglerna är lätta, men det gäller att spara rätt kort till rätt tillfälle.
 
@@ -90,9 +126,13 @@ Vändtia är ett av de mest spelade kortspelen i Sverige, och det fungerar bra �
 - Så länge det finns kort kvar att dra fyller ni på så att ni har minst tre kort på handen. Sedan spelar ni de uppvända korten och till sist de dolda – utan att veta vad de är.
 - Den som först blir av med alla sina kort vinner.
 
+![Uppställning i Vändtia: tre dolda kort med tre uppvända ovanpå för varje spelare, draghög och hög i mitten](/img/vandtia-uppstallning.svg)
+
 **Passar för:** Alla åldrar – ett bra första "riktigt" kortspel för barn och ett trevligt spel för vuxna.
 
-### 5. Svälta räv – klassikern för barn
+### 7. Svälta räv – klassikern för barn
+
+![Kortspel vid köksbordet – kort och snacks på en rutig duk](https://images.unsplash.com/photo-1607438802263-ada36dae55c5?auto=format&fit=crop&w=900&q=75)
 
 Svälta räv är ett av de första kortspelen många lär sig. Det är nästan bara tur, vilket gör att barn och vuxna kan spela på lika villkor.
 
@@ -106,7 +146,7 @@ Svälta räv är ett av de första kortspelen många lär sig. Det är nästan b
 
 **Passar för:** Föräldrar och barn. Bra för att träna på att känna igen korten.
 
-### 6. Finns i sjön – lättast för de minsta
+### 8. Finns i sjön – lättast för de minsta
 
 Finns i sjön är perfekt när ni spelar med ett litet barn. Det handlar om att samla fyra kort av samma valör, och det enda man behöver kunna är att känna igen siffror och bilder.
 
@@ -120,7 +160,7 @@ Finns i sjön är perfekt när ni spelar med ett litet barn. Det handlar om att 
 
 **Passar för:** Barn från förskoleåldern tillsammans med en vuxen.
 
-### 7. Krig – när ni inte vill lära er några regler alls
+### 9. Krig – när ni inte vill lära er några regler alls
 
 Krig är det enklaste kortspelet för två. Det kräver ingen strategi alls – men det är just därför det fungerar som tidsfördriv på tåget eller med ett barn som precis börjat spela kort.
 
@@ -137,7 +177,7 @@ Krig är det enklaste kortspelet för två. Det kräver ingen strategi alls – 
 
 Vill ni ha något mer än den vanliga kortleken finns det moderna kortspel som är gjorda just för två spelare. De är små, ofta billiga och har regler som är lätta att lära sig men svåra att bemästra. Fler kortbaserade spel – som Star Realms och Radlands – hittar ni i vår guide [Brädspel för två vuxna](/sallskapsspel-for-tva/).
 
-### 8. Jaipur – handel och kameler
+### 10. Jaipur – handel och kameler
 
 I Jaipur är ni två handlare som byter varor på marknaden och försöker sälja vid rätt tillfälle. Ni måste hela tiden välja mellan att sälja snabbt eller vänta på ett större parti – och motståndaren ser vad ni tar. Det är ett av de mest omtyckta kortspelen för två.
 
@@ -151,7 +191,7 @@ omdome: Ett av de bästa kortspelen för två – i en liten låda.
 lank: TODO
 :::
 
-### 9. Lost Cities – expeditioner och risk
+### 11. Lost Cities – expeditioner och risk
 
 Reiner Knizias klassiker där ni startar expeditioner i fem färger. Varje expedition kostar poäng att påbörja, så frågan är hela tiden: vågar ni satsa? Reglerna förklaras på några minuter, men partierna blir spännande ända till sista kortet.
 
@@ -165,9 +205,9 @@ omdome: Tidlöst, enkelt och lätt att ta fram.
 lank: TODO
 :::
 
-### 10. Schotten Totten – snabb duell om stenarna
+### 12. Schotten Totten – snabb duell om stenarna
 
-Ännu ett kortspel av Reiner Knizia. Ni turas om att lägga kort vid nio stenar mellan er och försöker bygga starkare kombinationer än motståndaren. Den som tar flest stenar – eller tre bredvid varandra – vinner. Lätt att lära, svårt att lägga ifrån sig.
+Ännu ett kortspel av Reiner Knizia. Ni turas om att lägga kort vid nio stenar mellan er och försöker bygga starkare kombinationer än motståndaren. Den som först tar fem av de nio stenarna – eller tre stenar i rad – vinner. Lätt att lära, svårt att lägga ifrån sig.
 
 :::spel
 namn: Schotten Totten
@@ -180,7 +220,7 @@ omdome: Litet, billigt och mycket bättre än det ser ut.
 lank: TODO
 :::
 
-### 11. Hanamikoji – kort men fullt av beslut
+### 13. Hanamikoji – kort men fullt av beslut
 
 Ett vackert japanskt kortspel där ni försöker vinna gunst hos sju geishor. Varje runda har ni fyra olika drag som var och en bara får användas en gång – och flera av dem tvingar er att låta motståndaren välja först. Ett parti är kort, men varje beslut känns viktigt.
 
@@ -194,7 +234,7 @@ omdome: Ett litet spel med stora beslut.
 lank: TODO
 :::
 
-### 12. The Fox in the Forest – stickspel för två
+### 14. The Fox in the Forest – stickspel för två
 
 De flesta stickspel kräver fyra spelare, men The Fox in the Forest är gjort för två. Flera kort har specialförmågor som ändrar spelet, och det gäller att inte vinna för många stick – den som tar för många stick får inga poäng alls för rundan.
 
@@ -208,7 +248,7 @@ omdome: Smart, snabbt och vackert illustrerat.
 lank: TODO
 :::
 
-### 13. The Fox in the Forest Duet – samma idé, fast tillsammans
+### 15. The Fox in the Forest Duet – samma idé, fast tillsammans
 
 Vill ni hellre samarbeta än tävla? I The Fox in the Forest Duet spelar ni stick tillsammans för att ta er genom skogen. Ni får inte visa varandra korten, så ni måste läsa av vad den andra vill göra – ett kortspel för två som passar par som inte gillar att förlora mot varandra.
 
@@ -226,7 +266,7 @@ lank: TODO
 
 ### Vill ni spela gratis eller köpa något nytt?
 
-Har ni en vanlig kortlek hemma kan ni börja direkt med Gin rummy, Chicago eller Vändtia. Moderna kortspel som Jaipur och Lost Cities kostar pengar, men ger en ny upplevelse som de flesta klassiker inte har – till exempel att alla kort är gjorda just för två spelare.
+Har ni en vanlig kortlek hemma kan ni börja direkt med Gin rummy, Kasino, Chicago eller Vändtia. Moderna kortspel som Jaipur och Lost Cities kostar pengar, men ger en ny upplevelse som de flesta klassiker inte har – till exempel att alla kort är gjorda just för två spelare.
 
 ### Hur mycket tid har ni?
 
@@ -244,11 +284,11 @@ Vill ni att den skickligaste ska vinna – välj Gin rummy, Chicago eller Hanami
 
 ### Vilket är det bästa kortspelet för två?
 
-Med vanlig kortlek är Gin rummy det mest kända kortspelet som är gjort för just två spelare. Det är lätt att lära sig men har mycket taktik. Bland moderna kortspel är Jaipur och Lost Cities två av de mest omtyckta.
+Med vanlig kortlek är Gin rummy och Kasino två av de mest spelade kortspelen för just två spelare. Det är lätt att lära sig men har mycket taktik. Bland moderna kortspel är Jaipur och Lost Cities två av de mest omtyckta.
 
 ### Vilka kortspel för två kan man spela med vanlig kortlek?
 
-Gin rummy, Chicago, Stress, Vändtia, Svälta räv, Finns i sjön och Krig spelas alla med en vanlig kortlek med 52 kort. Ni behöver alltså inte köpa något för att komma igång.
+Gin rummy, Chicago, Kasino, Tvåmanswhist, Stress, Vändtia, Svälta räv, Finns i sjön och Krig spelas alla med en vanlig kortlek med 52 kort. Ni behöver alltså inte köpa något för att komma igång.
 
 ### Vilka kortspel för två passar barn?
 

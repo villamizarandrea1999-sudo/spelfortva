@@ -142,7 +142,7 @@ Gemensamt för alla briefer (se CLAUDE.md):
 
 ## 6) Kortspel för två – PUBLICERAD 2026-11-18 (/kortspel-for-tva/)
 
-Ägaren beställde sidan 2026-11-18. SERP (topp 5: brädspel.org, spelstad.se, kortspel.co, playiro.com, qort.se): informativ avsikt – klassiska spel med vanlig kortlek + korta regler. Ingen konkurrent jämför moderna kortspel. Kasino utelämnat (regeln om casino). Fristående regelguider skrivs fortfarande inte.
+Ägaren beställde sidan 2026-11-18. SERP (topp 5: brädspel.org, spelstad.se, kortspel.co, playiro.com, qort.se): informativ avsikt – klassiska spel med vanlig kortlek + korta regler. Ingen konkurrent jämför moderna kortspel. Uppdaterad samma dag: Chicago-regler rättade enligt sv.wikipedia, Kasino (kortspelet, ägarens önskan) och Tvåmanswhist tillagda. Mulle, Skitgubbe/Mas, Canasta och Plump utelämnade – regler för två spelare kunde inte verifieras. Fristående regelguider skrivs fortfarande inte.
 
 Konkurrenter som redan rankar: allakortspel.se, kortspel.se, regler.io, yatzyregler.se, spelregler.org.
 

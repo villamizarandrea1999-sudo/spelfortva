@@ -374,7 +374,10 @@ def build():
         shutil.rmtree(DIST)
     DIST.mkdir()
     for f in (ROOT / "static").iterdir():
-        shutil.copy(f, DIST / f.name)
+        if f.is_dir():
+            shutil.copytree(f, DIST / f.name)
+        else:
+            shutil.copy(f, DIST / f.name)
 
     posts = sorted((parse(p) for p in (ROOT / "content/posts").glob("*.md")),
                    key=lambda p: p["date"], reverse=True)
