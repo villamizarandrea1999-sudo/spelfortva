@@ -53,7 +53,7 @@ par: För par · guider: Guider · nyheter: Nyheter
 
 ## Article plan
 Done: /spel-for-tva/ (main guide) · /sallskapsspel-for-tva/ (retargeted to "brädspel för två vuxna";
-must NOT reuse games from the main guide) · /co-op-spel-ps5/ (12 games) · /julklapp-spel-for-tva/.
+must NOT reuse games from the main guide) · /co-op-spel-ps5/ (12 games) · /julklapp-spel-for-tva/ · /kortspel-for-tva/ (7 classics with rules + 6 modern card games).
 Full briefs for the next articles: `docs/briefs.md`.
 
 Next, in priority order:
@@ -63,8 +63,7 @@ Next, in priority order:
 4. Reviews: 7 Wonders Duel, Patchwork, Jaipur, Codenames Duet, It Takes Two, Split Fiction
 
 Dropped/merged (would cannibalize existing pages): "brädspel för två – topplista" → /sallskapsspel-for-tva/;
-"PS5-spel för två" → /co-op-spel-ps5/. Do NOT write card-game or rules guides ("kortspel för två",
-regler) – allakortspel.se, kortspel.se, regler.io etc. own that SERP.
+"PS5-spel för två" → /co-op-spel-ps5/. Do NOT write separate card-game rules guides (regler) – allakortspel.se, kortspel.se, regler.io etc. own that SERP.
 Other ideas from the original plan (spel för 2 gratis online, roliga spel för två, spel för två personer)
 overlap with the main guide and the distans article – check before writing.
 

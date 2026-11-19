@@ -8,4 +8,6 @@ I varje guide anger vi hur många som kan spela, hur lång tid ett parti tar, vi
 
 Är ni nya på brädspel, börja med vår stora guide [Spel för två – 20 bästa spelen för två spelare](/spel-for-tva/). Där hittar ni enkla favoriter som Patchwork och Jaipur. Har ni redan spelat dem och vill ha mer att bita i, gå vidare till [brädspel för två vuxna](/sallskapsspel-for-tva/) med djupare strategispel, snabba fillers och moderna klassiker.
 
+Vill ni spela kort? I guiden [kortspel för två](/kortspel-for-tva/) hittar ni klassiker med vanlig kortlek, som Gin rummy och Chicago, och moderna kortspel gjorda för två.
+
 Letar ni efter en present? Se våra [julklappstips med spel för två](/julklapp-spel-for-tva/).

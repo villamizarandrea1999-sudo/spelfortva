@@ -361,7 +361,7 @@ Samarbetsspel fungerar ofta bäst för par: Codenames Duet, Sky Team och It Take
 
 ### Finns det bra spel för två som är gratis?
 
-Ja. Wordfeud och Quizkampen är gratis att ladda ner, och på Board Game Arena kan ni spela många brädspel gratis i webbläsaren. Och med en vanlig kortlek kan ni spela klassiska kortspel för två, som kasino.
+Ja. Wordfeud och Quizkampen är gratis att ladda ner, och på Board Game Arena kan ni spela många brädspel gratis i webbläsaren. Och med en vanlig kortlek kan ni spela klassiska [kortspel för två](/kortspel-for-tva/), som Gin rummy och Stress.
 
 ### Vilka brädspel för två är lättast att lära sig?
 
