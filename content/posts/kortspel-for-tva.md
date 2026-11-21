@@ -111,6 +111,8 @@ Stress är raka motsatsen till Gin rummy: här finns inga turer, ni spelar samti
 
 ![Uppställning i Stress: fyra uppvända kort per spelare och två högar i mitten](/img/stress-uppstallning.svg)
 
+Alla regler, en exempelrunda och tips för att vinna hittar du i vår guide [Stress kortspel – regler för två](/stress-kortspel/).
+
 **Passar för:** Syskon, kompisar och alla som vill ha fart. Bra för barn som kan siffrorna.
 
 ### 6. Vändtia – enkelt, roligt och lite elakt

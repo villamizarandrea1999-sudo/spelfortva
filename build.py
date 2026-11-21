@@ -365,6 +365,27 @@ def faq_schema(p):
     return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
 
 
+def howto_schema(p):
+    """HowTo-schema: front matter `howto: <H2-rubrik>` – stegen är punkterna i första numrerade listan efter rubriken."""
+    heading = p.get("howto")
+    if not heading:
+        return ""
+    text = lambda x: " ".join(html.unescape(re.sub("<[^>]+>", "", x)).split())
+    for m in re.finditer(r'<h2[^>]*>(.*?)</h2>(.*?)(?=<h2|\Z)', p["html"], re.S):
+        if text(m.group(1)) != heading:
+            continue
+        ol = re.search(r"<ol>(.*?)</ol>", m.group(2), re.S)
+        if not ol:
+            break
+        steps = [{"@type": "HowToStep", "position": i, "text": text(li)}
+                 for i, li in enumerate(re.findall(r"<li>(.*?)</li>", ol.group(1), re.S), 1)]
+        data = {"@context": "https://schema.org", "@type": "HowTo", "name": heading,
+                "inLanguage": "sv-SE", "step": steps}
+        return f'<script type="application/ld+json">{json.dumps(data, ensure_ascii=False)}</script>'
+    WARNINGS.append(f"{p['slug']}: howto-rubriken '{heading}' eller dess numrerade lista hittades inte")
+    return ""
+
+
 def breadcrumb_schema(trail):
     """trail: [(namn, sökväg), ...] – samma steg som den synliga brödsmulan."""
     items = [{"@type": "ListItem", "position": i, "name": name, "item": f"{SITE['url']}{path}"}
@@ -479,7 +500,7 @@ def build():
             WARNINGS.append(f"{p['slug']}: titeln är {len(p['title'])} tecken (Google visar ca 60)")
         write(f"/{p['slug']}/", page(page_title(p["title"]), p.get("description", ""), f"/{p['slug']}/",
                                      content, extra + f'<meta property="og:image" content="{esc(image_url(p, 1200))}">\n'
-                                     f'<script type="application/ld+json">{schema}</script>\n{faq_schema(p)}\n'
+                                     f'<script type="application/ld+json">{schema}</script>\n{faq_schema(p)}\n{howto_schema(p)}\n'
                                      + breadcrumb_schema([("Start", "/"), (cat, f"/kategori/{p['category']}/"),
                                                           (crumb, f"/{p['slug']}/")]), compact=bool(p.get("game"))))
 
