@@ -5,6 +5,7 @@ crumb: Stress kortspel
 slug: stress-kortspel
 description: Stress regler steg för steg: så spelar du det snabba kortspelet för två. Med diagram, värdetabell, exempelrunda, tips för att vinna och varianter.
 date: 2026-11-21
+updated: 2026-11-21
 category: bradspel
 image: 1607438802263-ada36dae55c5
 howto: Så spelar du Stress – snabbregler
@@ -69,6 +70,8 @@ Ess ligger alltså bredvid 2:an. Många väljer att även låta ess ligga bredvi
 
 Varje gång du lägger ett kort från raden fyller du på med ett nytt från din plockhög. Raden ska alltid ha fyra kort, så länge plockhögen räcker.
 
+Får du två kort med samma valör i raden, till exempel två sexor, kan du lägga dem på varandra i raden. Då frigörs en plats som du fyller på från plockhögen – det ger dig fler kort att välja mellan.
+
 ### När ingen kan lägga
 
 Ibland kör ni båda fast: inget kort i någon av raderna passar på spelhögarna. Då vänder ni samtidigt varsitt nytt kort från plockhögen och lägger det på spelhögarna. Sedan fortsätter spelet som vanligt.
@@ -79,13 +82,27 @@ Räkna gärna "ett, två, tre" högt, så att ingen hinner kika först.
 
 Visar de två spelhögarna samma valör – till exempel två åttor – gäller det att vara snabb. Ropa "Stress!" och slå handen på en av spelhögarna.
 
-Den som är långsammast får ta båda spelhögarna och lägga dem i sin plockhög. Det gör ont, för plötsligt har du många fler kort att bli av med.
+Den som är långsammast får ta båda spelhögarna, blanda in dem i sin plockhög och fortsätta spela. Det gör ont, för plötsligt har du många fler kort att bli av med.
+
+Efter ett "Stress!" är mitten tom. Ni startar om precis som i början: vänd varsitt kort från plockhögen och lägg dem i mitten.
+
+Går det inte att avgöra vem som var snabbast? Då är en vanlig lösning att var och en tar den spelhög som hen slog på.
 
 ## Hur man vinner
 
-Den som först blir av med alla sina kort vinner. Det betyder både plockhögen och de fyra korten i raden.
+Den som först blir av med alla sina kort vinner. Det betyder både plockhögen och korten i raden.
 
 Eftersom den som förlorar ett "Stress!" får fler kort kan ledningen svänga snabbt. Ge alltså inte upp om du ligger efter.
+
+## När plockhögen tar slut
+
+Mot slutet av partiet har ofta en av er tömt sin plockhög. Då kan du inte fylla på raden längre, men du spelar vidare med korten som ligger framför dig.
+
+Kör ni fast och ingen kan lägga, behöver båda vända ett nytt kort. Har bara den ena kort kvar i plockhögen är en vanlig regel att den spelaren ger ett kort till den andra, så att ni kan vända samtidigt. Har ingen av er kort kvar i plockhögen och ingen kan lägga, tar ni varsin spelhög och spelar vidare.
+
+## Om någon lägger fel
+
+När det går fort händer det att någon lägger ett kort som inte passar. Många spelar med att den som upptäcker det säger "stopp". Då kontrollerar ni korten, och ett felaktigt kort tas tillbaka till raden innan ni fortsätter.
 
 ## Exempel på en spelomgång
 
@@ -110,6 +127,15 @@ Så här kan några sekunder se ut (Kn = knekt, D = dam, K = kung). Spelhög 1 v
 4. **Ha handen nära högarna.** När två kort med samma valör dyker upp avgör bråkdelar av en sekund vem som förlorar.
 5. **Bli inte stressad av namnet.** Det är lätt att lägga fel när det går fort. Kolla valören en extra gång – snabbt men rätt vinner.
 
+## Stress med barn
+
+Stress passar bra att spela med barn från ungefär sex–sju års ålder, när de känner igen siffrorna och kan räkna ett steg upp och ner. Spelet tränar både uppmärksamhet och sifferkänsla.
+
+- **Börja långsamt.** Spela de första omgångarna utan tidspress och prata högt om vilka kort som passar.
+- **Låt värdetabellen ligga framme.** Klädda kort och ess är svårast i början – tabellen ovan hjälper.
+- **Spela utan "Stress!" första gången.** Lägg till ropet när barnet har förstått hur man lägger kort.
+- **Vuxna kan ge sig själva ett handikapp,** till exempel att bara lägga kort med ena handen.
+
 ## Varianter av Stress
 
 - **Ess högt och lågt:** ess ligger både bredvid 2:an och kungen. Bestäm detta innan ni börjar.
@@ -126,7 +152,7 @@ Stress är ett kortspel för två. Kortleken delas i två lika stora högar, och
 
 ### Vad händer om båda ropar stress samtidigt?
 
-Den som slår handen på högen sist räknas som långsammast och tar spelhögarna. Går det inte att avgöra är det bäst att ni har bestämt i förväg hur ni gör, till exempel att ni båda vänder nya kort och spelar vidare.
+Den som slår handen på högen sist räknas som långsammast och tar båda spelhögarna. Går det inte att avgöra är en vanlig lösning att var och en tar den spelhög som hen slog på.
 
 ### Är ess högt eller lågt i Stress?
 
@@ -134,11 +160,19 @@ I grundversionen ligger ess bredvid 2:an. Många spelar också med att ess ligge
 
 ### Vad händer när plockhögen tar slut?
 
-Då kan du inte fylla på raden längre, men du spelar vidare med korten du har framför dig. När även raden är tom har du blivit av med alla kort och vinner.
+Då kan du inte fylla på raden längre, men du spelar vidare med korten framför dig. Kör ni fast ger den som har kort kvar ett kort till den andra, så att ni kan vända samtidigt. När även din rad är tom har du blivit av med alla kort och vinner.
 
 ### Vad heter Stress på engelska?
 
 På engelska kallas spelet ofta Speed eller Spit. Letar du efter regler på engelska är det de namnen du ska söka på.
+
+### Får man lägga en tvåa på ett ess?
+
+Ja. Ess räknas som ett och ligger bredvid tvåan, så du får lägga en tvåa på ett ess och ett ess på en tvåa. Spelar ni med ess både högt och lågt får du även lägga ess på kung och kung på ess.
+
+### Vad betyder valör i Stress?
+
+Valör är kortets värde, till exempel 7, knekt eller ess. Färgen – hjärter, ruter, spader eller klöver – spelar ingen roll i Stress, det är bara valören som räknas.
 
 ### Hur lång tid tar en omgång?
 
