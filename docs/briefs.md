@@ -28,7 +28,7 @@ Gemensamt för alla briefer (se CLAUDE.md):
 
 **Internlänkar:** /spel-for-tva/ (första stycket) · /sallskapsspel-for-tva/ · /co-op-spel-ps5/
 
-**Att göra efter publicering:** lägg in affiliatelänkar (`lank:`) – det här är artikeln med tydligast köpintention. Uppdatera årtalet inför jul 2027.
+**Att göra efter publicering:** lägg in affiliatelänkar (`lank:`) – det här är artikeln med tydligast köpintention. Titeln säger (2026) – byt till (2027) i januari 2027, inte tidigare.
 
 ---
 

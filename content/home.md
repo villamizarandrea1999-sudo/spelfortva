@@ -1,5 +1,5 @@
 ---
-title: Hitta rätt spel för två
+title: Om Spel för två
 description: Guider till de bästa spelen för två spelare.
 date: 2026-11-14
 ---

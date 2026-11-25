@@ -13,7 +13,7 @@ SITE = {
     # Namngiven skribent: fyll i när ni har en riktig person, t.ex.
     # {"name": "För Efternamn", "bio": "Kort bio …", "url": "/om-oss/"}. Så länge det är None används redaktionen.
     "author": None,
-    "home_description": "Guider till spel för två: brädspel, kortspel, konsolspel och appar för par, vänner och syskon – topplistor, julklappstips och co-op.",
+    "home_description": "Magasin om spel för två spelare: guider, regler och gratis spel online – brädspel, kortspel, konsol och mobil för par, vänner och familj.",
     "lang": "sv-SE",       # svenska, riktad mot Sverige
     "country": "SE",
     # Google Analytics 4: byt ut mot ert riktiga mät-ID. Så länge det står XXXXXXX laddas ingen spårning.
@@ -526,7 +526,7 @@ def build():
   <div><p class="play-kicker">Spela direkt – gratis</p><h2>{esc(game_post.get('h1') or game_post['title'])}</h2>
   <p>Utmana en vän på samma mobil eller spela mot datorn. Ingen nedladdning, ingen inloggning.</p>
   <a class="btn-play" href="/{game_post['slug']}/">Spela Sänka skepp</a></div></section>"""
-    home = f"""<h1 class="sr-only">{SITE['name']} – guider och tips om spel för två spelare</h1>
+    home = f"""<h1 class="sr-only">{SITE['name']} – magasinet om brädspel, kortspel och co-op</h1>
 <section class="featured">{card(featured, "feature") if featured else ""}</section>
 {play}
 {'<section>' + section_head("Senaste artiklar") + '<div class="grid grid-3">' + "".join(card(p) for p in rest[:12]) + '</div></section>' if rest else ''}
@@ -544,7 +544,7 @@ def build():
              "knowsLanguage": SITE["lang"]},
         ],
     }, ensure_ascii=False)
-    write("/", page(f"{SITE['name']} – guider och tips om spel för två spelare", SITE["home_description"], "/", home,
+    write("/", page(f"{SITE['name']} – magasinet om brädspel, kortspel och co-op", SITE["home_description"], "/", home,
                     f'<script type="application/ld+json">{site_schema}</script>'))
 
     # Kategorier

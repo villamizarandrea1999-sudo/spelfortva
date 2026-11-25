@@ -1,5 +1,5 @@
 ---
-title: Spel för två – 20 bästa spelen för två spelare (2027)
+title: Spel för två – 20 bästa spelen för två spelare (2026)
 description: 20 bästa spelen för två: brädspel, kortspel, konsol och mobil. Speltid, ålder och vem varje spel passar – för par, vänner och syskon.
 date: 2026-11-14
 category: guider
